@@ -23,3 +23,7 @@ insert into Enrolment(ParticipantID,CategoryID,EnrolmentDate,Status) values
 (1,4,'2026-08-05','Registered'),
 (2,1,'2026-08-02','Registered'),
 (2,5,'2026-08-06','Registered');
+
+insert into Result(EnrolmentID,FinishTime,Position,Status) values
+(1,'00:52:30',14,'Finished'),
+(3,'00:28:10',5,'Finished');
