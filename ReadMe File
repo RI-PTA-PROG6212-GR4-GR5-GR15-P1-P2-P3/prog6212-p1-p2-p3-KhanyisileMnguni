@@ -11,22 +11,22 @@ and prepare for race day using live weather and route information.
 This repository covers Part 1:
 System Planning and Database — the ERD, API endpoint plan, and SQL database script that were completed before any application code was written.
 
-Roles
-Organiser — creates and manages Events and their Categories, views who has enrolled in their events, and captures Results once a race is completed.
-An organiser can only manage the events they themselves created.
+Roles:
+Organiser — creates and manages Events and their Categories, views who has enrolled in their events, and captures results once a race is completed.
+An organiser can only manage the events they created themselves.
 Participant — browses public events and categories, enrols in a category, views their own enrolment history,
-and can view their own results and overall performance history across events.
+and can view their own results and overall performance history across multiple events.
 
 Database Design (ERD)
 
-See docs/raceday_erd.png. The data model consists of six entities:
+See docs/raceday_erd.docx, the data model consists of six entities:
 Organiser, Participant, Event, Category, Enrolment, and Result.
 Enrolment is the associative table resolving the many-to-many relationship between Participants and Categories;
 Result stores one outcome per Enrolment.
 
 API Endpoint Plan
 
-See docs/api_endpoint_plan.md for the full table of planned endpoints
+See docs/api_endpoint_plan.md.docx for the full table of planned endpoints
 (Method, Route, Description, Role Required, Request Body, Expected Response),
 covering authentication, user profile, events, categories, enrolments, and results.
 
