@@ -14,18 +14,15 @@ System Planning and Database — the ERD, API endpoint plan, and SQL database sc
 Roles
 Organiser — creates and manages Events and their Categories, views who has enrolled in their events, and captures Results once a race is completed.
 An organiser can only manage the events they themselves created.
-Participant — browses public events and categories, enrols in a category, views their own enrolment history, and can view their own results and overall performance history across events.
-
-
-
-
-
-
-
+Participant — browses public events and categories, enrols in a category, views their own enrolment history,
+and can view their own results and overall performance history across events.
 
 Database Design (ERD)
 
-See docs/raceday_erd.png. The data model consists of six entities: Organiser, Participant, Event, Category, Enrolment, and Result. Enrolment is the associative table resolving the many-to-many relationship between Participants and Categories; Result stores one outcome per Enrolment.
+See docs/raceday_erd.png. The data model consists of six entities:
+Organiser, Participant, Event, Category, Enrolment, and Result.
+Enrolment is the associative table resolving the many-to-many relationship between Participants and Categories;
+Result stores one outcome per Enrolment.
 
 API Endpoint Plan
 
