@@ -10,3 +10,10 @@ insert into Event(OrganiserID, EventName,EventDate,Location,Description)
 values(1,'Centurion Sunrise Run','2026-10-12','Centurion, Gauteng','A community road ruuning event through Centurion.'),
 (2,'Heritage Charity Walk','2026-09-25','Pretoria,Gauteng','Charity walk raising funds for local schools.'),
 (3,'Cape Coastal Cycle Challenge','2026-11-12','Cape Twon, Western CApe','A scenic cyclying event along the Cape coastline.');
+
+insert into Category(EventID,CategoryName,DistanceKM,MaxParticipants,EntryFee)
+value(1.'5km Fun Run',5.00,300,100.00),
+(2,'10km Road Race', 10.00,200,150.00),
+(2,'5km Walk',5.00,500,50,00),
+(3,'40km Road Cycle', 40.00,250,250.00),
+(3,'80km Road Cycle',80.00,150,350,00);
