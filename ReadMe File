@@ -26,8 +26,12 @@ Result stores one outcome per Enrolment.
 
 API Endpoint Plan
 
-See docs/api_endpoint_plan.md for the full table of planned endpoints (Method, Route, Description, Role Required, Request Body, Expected Response), covering authentication, user profile, events, categories, enrolments, and results.
+See docs/api_endpoint_plan.md for the full table of planned endpoints
+(Method, Route, Description, Role Required, Request Body, Expected Response),
+covering authentication, user profile, events, categories, enrolments, and results.
 
 SQL Script
 
-See docs/raceday_database.sql. Run in SQL Server Management Studio (SSMS). The script creates all six tables with primary keys, foreign keys, and constraints, and seeds the database with 2 Organisers, 2 Participants, 3 Events, categories for each event, and sample enrolments/results.
+See docs/raceday_database.sql. Run in SQL Server Management Studio (SSMS).
+The script creates all six tables with primary keys, foreign keys, and constraints,
+and seeds the database with 2 Organisers, 2 Participants, 3 Events, categories for each event, and sample enrolments/results.
