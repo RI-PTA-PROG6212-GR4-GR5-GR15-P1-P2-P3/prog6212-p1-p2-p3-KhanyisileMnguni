@@ -35,3 +35,10 @@ SQL Script
 See docs/raceday_database.sql. Run in SQL Server Management Studio (SSMS).
 The script creates all six tables with primary keys, foreign keys, and constraints,
 and seeds the database with 2 Organisers, 2 Participants, 3 Events, categories for each event, and sample enrolments/results.
+
+CI/CD
+
+A GitHub Actions workflow (.github/workflows/validate-docs.yml) runs on every push and pull request to main,
+validating that the /docs folder exists and contains the ERD, API endpoint plan, and SQL script.
+
+
