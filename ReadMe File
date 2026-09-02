@@ -1,1 +1,36 @@
+System Description
 
+RaceDay is a full-stack, web-based event management system built for the South African road running, walking, and cycling community.
+It replaces the paper-based registration, spreadsheets, and disconnected communication that many local road events
+(park runs, charity walks, community cycling events) currently rely on.
+
+The platform allows Event Organisers to create and manage events, define categories (e.g. distance-based race categories),and capture participant results.
+Participants can browse upcoming events, enter events by enrolling in a category, track their personal performance history across past events,
+and prepare for race day using live weather and route information.
+
+This repository covers Part 1:
+System Planning and Database — the ERD, API endpoint plan, and SQL database script that were completed before any application code was written.
+
+Roles
+Organiser — creates and manages Events and their Categories, views who has enrolled in their events, and captures Results once a race is completed.
+An organiser can only manage the events they themselves created.
+Participant — browses public events and categories, enrols in a category, views their own enrolment history, and can view their own results and overall performance history across events.
+
+
+
+
+
+
+
+
+Database Design (ERD)
+
+See docs/raceday_erd.png. The data model consists of six entities: Organiser, Participant, Event, Category, Enrolment, and Result. Enrolment is the associative table resolving the many-to-many relationship between Participants and Categories; Result stores one outcome per Enrolment.
+
+API Endpoint Plan
+
+See docs/api_endpoint_plan.md for the full table of planned endpoints (Method, Route, Description, Role Required, Request Body, Expected Response), covering authentication, user profile, events, categories, enrolments, and results.
+
+SQL Script
+
+See docs/raceday_database.sql. Run in SQL Server Management Studio (SSMS). The script creates all six tables with primary keys, foreign keys, and constraints, and seeds the database with 2 Organisers, 2 Participants, 3 Events, categories for each event, and sample enrolments/results.
