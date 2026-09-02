@@ -17,3 +17,9 @@ insert into Category(EventID,CategoryName,DistanceKM,MaxParticipants,EntryFee) v
 (2,'5km Walk',5.00,500,50,00),
 (3,'40km Road Cycle', 40.00,250,250.00),
 (3,'80km Road Cycle',80.00,150,350,00);
+
+insert into Enrolment(ParticipantID,CategoryID,EnrolmentDate,Status) values
+(1,2,'2026-08-01','Registered'),
+(1,4,'2026-08-05','Registered'),
+(2,1,'2026-08-02','Registered'),
+(2,5,'2026-08-06','Registered');
