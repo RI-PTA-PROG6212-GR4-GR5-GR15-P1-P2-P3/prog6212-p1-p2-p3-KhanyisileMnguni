@@ -1,0 +1,54 @@
+@RaceDay.API_HostAddress = http://localhost:5164
+
+### Register Organiser
+POST http://127.0.0.1:5164/api/Auth/register
+Content-Type: application/json
+
+{
+  "name": "Test Organiser",
+  "email": "organiser@raceday.com",
+  "password": "Password123!",
+  "role": "Organiser",
+  "organisationName": "RaceDay Events"
+}
+  "organisationName": "RaceDay Events"
+}
+
+###
+
+### Register Participant
+POST http://localhost:5164/api/Auth/register
+Content-Type: application/json
+
+{
+  "name": "Test Participant",
+  "email": "participant@raceday.com",
+  "password": "Password123!",
+  "role": "Participant",
+  "dateOfBirth": "2000-05-15",
+  "emergencyContact": "0712345678"
+}
+
+###
+
+### Login Organiser
+POST http://localhost:5164/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "organiser@raceday.com",
+  "password": "Password123!"
+}
+
+###
+
+### Login Participant
+POST http://localhost:5164/api/Auth/login
+Content-Type: application/json
+
+{
+  "email": "participant@raceday.com",
+  "password": "Password123!"
+}
+
+###
