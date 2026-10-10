@@ -1,7 +1,7 @@
 @RaceDay.API_HostAddress = http://localhost:5164
 
 ### Register Organiser
-POST http://127.0.0.1:5164/api/Auth/register
+POST {{HostAddress}}/api/Auth/register
 Content-Type: application/json
 
 {
@@ -11,13 +11,12 @@ Content-Type: application/json
   "role": "Organiser",
   "organisationName": "RaceDay Events"
 }
-  "organisationName": "RaceDay Events"
-}
+
 
 ###
 
 ### Register Participant
-POST http://localhost:5164/api/Auth/register
+POST {{HostAddress}}/api/Auth/register
 Content-Type: application/json
 
 {
@@ -32,7 +31,7 @@ Content-Type: application/json
 ###
 
 ### Login Organiser
-POST http://localhost:5164/api/Auth/login
+POST {{HostAddress}}/api/Auth/login
 Content-Type: application/json
 
 {
@@ -43,7 +42,7 @@ Content-Type: application/json
 ###
 
 ### Login Participant
-POST http://localhost:5164/api/Auth/login
+POST {{HostAddress}}/api/Auth/login
 Content-Type: application/json
 
 {

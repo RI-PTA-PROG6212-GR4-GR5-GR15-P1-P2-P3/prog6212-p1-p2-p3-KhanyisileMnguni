@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "Z2Lxzd0jbXc=",
+  "dgSpecHash": "PiMrXTVf58U=",
   "success": true,
-  "projectFilePath": "C:\\Users\\mngun\\source\\repos\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
+  "projectFilePath": "C:\\Users\\mngun\\OneDrive\\Documents\\GitHub\\prog6212-p1-p2-p3-KhanyisileMnguni\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\mngun\\.nuget\\packages\\azure.core\\1.50.0\\azure.core.1.50.0.nupkg.sha512",
     "C:\\Users\\mngun\\.nuget\\packages\\azure.identity\\1.17.1\\azure.identity.1.17.1.nupkg.sha512",

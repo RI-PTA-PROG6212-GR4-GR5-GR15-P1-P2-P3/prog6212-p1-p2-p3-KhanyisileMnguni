@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\mngun\\source\\repos\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj": {}
+    "C:\\Users\\mngun\\OneDrive\\Documents\\GitHub\\prog6212-p1-p2-p3-KhanyisileMnguni\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\mngun\\source\\repos\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj": {
+    "C:\\Users\\mngun\\OneDrive\\Documents\\GitHub\\prog6212-p1-p2-p3-KhanyisileMnguni\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\mngun\\source\\repos\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
+        "projectUniqueName": "C:\\Users\\mngun\\OneDrive\\Documents\\GitHub\\prog6212-p1-p2-p3-KhanyisileMnguni\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
         "projectName": "RaceDay.API",
-        "projectPath": "C:\\Users\\mngun\\source\\repos\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
+        "projectPath": "C:\\Users\\mngun\\OneDrive\\Documents\\GitHub\\prog6212-p1-p2-p3-KhanyisileMnguni\\RaceDay.API\\RaceDay.API\\RaceDay.API.csproj",
         "packagesPath": "C:\\Users\\mngun\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\mngun\\source\\repos\\RaceDay.API\\RaceDay.API\\obj\\",
+        "outputPath": "C:\\Users\\mngun\\OneDrive\\Documents\\GitHub\\prog6212-p1-p2-p3-KhanyisileMnguni\\RaceDay.API\\RaceDay.API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
