@@ -212,3 +212,6 @@ Continuous Integration:
 The project is intended to run automated tests locally and through **GitHub Actions CI/CD**.
 The GitHub Actions workflow should restore dependencies, build the solution, and run the test suite. Successful local test results do not by themselves confirm that the GitHub Actions workflow is configured or passing.
 
+Screenshot of CI/CD workflow
+<img width="1510" height="515" alt="image" src="https://github.com/user-attachments/assets/54940fa0-698e-4485-8986-9f37dd5a095a" />
+
