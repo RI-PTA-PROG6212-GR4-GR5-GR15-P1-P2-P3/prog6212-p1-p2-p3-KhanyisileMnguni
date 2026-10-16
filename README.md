@@ -215,3 +215,5 @@ The GitHub Actions workflow should restore dependencies, build the solution, and
 Screenshot of CI/CD workflow
 <img width="1510" height="515" alt="image" src="https://github.com/user-attachments/assets/54940fa0-698e-4485-8986-9f37dd5a095a" />
 
+YouTube Video link:
+https://youtu.be/05gTS_h3Tv8
