@@ -22,10 +22,10 @@ jobs:
           dotnet-version: '10.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore RaceDay.API.slnx
+        run: dotnet restore RaceDay.API
 
       - name: Build solution
-        run: dotnet build RaceDay.API.slnx --configuration Release --no-restore
+        run: dotnet build RaceDay.API --configuration Release --no-restore
 
       - name: Run tests
-        run: dotnet test RaceDay.API.slnx --configuration Release --no-build --verbosity normal
+        run: dotnet test RaceDay.API --configuration Release --no-build --verbosity normal
