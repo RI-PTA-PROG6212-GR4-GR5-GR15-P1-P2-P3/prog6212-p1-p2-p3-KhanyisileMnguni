@@ -46,7 +46,7 @@ validating that the /docs folder exists and contains the ERD, API endpoint plan,
 
 A RESTful API for managing race events, participants, event enrolments, and user authentication. The API uses role-based access control to help ensure that users can only access functionality permitted by their assigned roles.
 
-## Features:
+Features:
 User Authentication: User registration and login using JWT (JSON Web Token) authentication.
 Role-Based Access Control: Restricts protected endpoints according to user roles.
 Event Management: Allows authorised Organisers to manage race events.
@@ -55,6 +55,15 @@ Categories: Provides functionality for managing event categories.
 Participant Management: Supports participant-related operations.
 Profile Management: Provides profile-related functionality.
 Automated Testing: Includes integration tests for authentication, event management, enrolments, and role-based access.
+
+Technologies Used:
+C#
+ASP.NET Core Web API (.NET 10)
+Entity Framework Core
+Microsoft SQL Server
+JWT Authentication
+xUnit
+ASP.NET Core MVC Testing
 
 ## The two roles
 **Organiser** - creates, updates and deletes *their own* events; defines categories for them (name, distance, max
