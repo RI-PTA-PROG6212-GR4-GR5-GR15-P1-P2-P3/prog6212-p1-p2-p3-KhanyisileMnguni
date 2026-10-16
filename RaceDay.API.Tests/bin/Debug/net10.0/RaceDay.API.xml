@@ -1,0 +1,245 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>RaceDay.API</name>
+    </assembly>
+    <members>
+        <member name="P:RaceDay.API.Controllers.ApiControllerBase.CurrentUserId">
+            <summary>ID of the logged-in user, read from the JWT. Only call on [Authorize]d actions.</summary>
+        </member>
+        <member name="M:RaceDay.API.Controllers.AuthController.Register(RaceDay.API.Dtos.RegisterRequest)">
+            <summary>Registers a new user as an Organiser or a Participant.</summary>
+            <remarks>
+            Expects name, email, password (min 8 chars) and role ("Organiser" or "Participant").
+            Organisers may add organisationName. Participants must add dateOfBirth and may add emergencyContact.
+            The password is stored as a salted hash.
+            </remarks>
+            <response code="201">Returns the new user ID and role.</response>
+            <response code="400">Invalid or missing fields.</response>
+            <response code="409">Email already in use.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.AuthController.Login(RaceDay.API.Dtos.LoginRequest)">
+            <summary>Logs a user in and returns a JWT access token.</summary>
+            <remarks>
+            Copy the returned token, click the Authorize button in Swagger and paste it in.
+            It is then sent as "Authorization: Bearer {token}" on every request. The token carries the user's ID and role.
+            </remarks>
+            <response code="200">Returns the JWT token, its expiry, and the user ID, role and name.</response>
+            <response code="401">Invalid credentials.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.CategoriesController.Update(System.Int32,RaceDay.API.Dtos.CategoryRequest)">
+            <summary>Updates a category. Only the Organiser who owns its event may do this.</summary>
+            <response code="200">The updated category.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Category not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.CategoriesController.Delete(System.Int32)">
+            <summary>Removes a category from an event. Owning Organiser only.</summary>
+            <response code="204">Deleted.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Category not found.</response>
+            <response code="409">The category already has enrolments.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.CategoriesController.Enrol(System.Int32,RaceDay.API.Dtos.EnrolRequest)">
+            <summary>Enrols the logged-in Participant into a category.</summary>
+            <remarks>The body is optional; the server records today's date as the enrolment date.</remarks>
+            <response code="201">The new enrolment.</response>
+            <response code="400">The event has already taken place.</response>
+            <response code="403">Logged in as an Organiser.</response>
+            <response code="404">Category not found.</response>
+            <response code="409">Category is full, or you are already enrolled in it.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EnrolmentsController.GetMine">
+            <summary>Lists the logged-in Participant's enrolments, with event and category details.</summary>
+            <response code="200">Array of enrolments.</response>
+            <response code="403">Logged in as an Organiser.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EnrolmentsController.Cancel(System.Int32)">
+            <summary>Cancels one of the logged-in Participant's own enrolments.</summary>
+            <response code="204">Cancelled.</response>
+            <response code="403">Not your enrolment.</response>
+            <response code="404">Enrolment not found.</response>
+            <response code="409">A result has already been captured, so it cannot be cancelled.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EnrolmentsController.CaptureResult(System.Int32,RaceDay.API.Dtos.ResultRequest)">
+            <summary>Captures a result (finish time, position, status) for an enrolment. Owning Organiser only.</summary>
+            <remarks>Body: finishTime (hh:mm:ss), position, status (Finished / DNF / DNS / Disqualified). A finishTime is required when status is Finished.</remarks>
+            <response code="201">The new result.</response>
+            <response code="400">Invalid fields.</response>
+            <response code="403">The enrolment is not in one of your events.</response>
+            <response code="404">Enrolment not found.</response>
+            <response code="409">A result already exists for this enrolment.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EnrolmentsController.GetResult(System.Int32)">
+            <summary>Returns the result for an enrolment: the Participant who owns it, or the Organiser of its event.</summary>
+            <response code="200">The result.</response>
+            <response code="403">You are neither the enrolled Participant nor the event's Organiser.</response>
+            <response code="404">Enrolment not found, or no result captured yet.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.Create(RaceDay.API.Dtos.EventRequest)">
+            <summary>Creates a new event owned by the logged-in Organiser.</summary>
+            <remarks>Body: eventName, eventType (Run / Walk / Cycle), eventDate, location, description. Distances are set per category.</remarks>
+            <response code="201">Returns the new event ID.</response>
+            <response code="401">Not logged in.</response>
+            <response code="403">Logged in as a Participant.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetAll(System.Boolean)">
+            <summary>Lists upcoming events (public). Add ?includePast=true to include events that have already happened.</summary>
+            <response code="200">Array of events, soonest first.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetById(System.Int32)">
+            <summary>Returns full details of one event, including its categories (public).</summary>
+            <response code="200">The event and its categories.</response>
+            <response code="404">Event not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.Update(System.Int32,RaceDay.API.Dtos.EventRequest)">
+            <summary>Updates an event. Only the Organiser who created it may do this.</summary>
+            <response code="200">The updated event.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Event not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.Delete(System.Int32)">
+            <summary>Deletes an event and its categories. Only the owning Organiser may do this.</summary>
+            <response code="204">Deleted.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Event not found.</response>
+            <response code="409">Participants are already enrolled, so the event cannot be deleted.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.AddCategory(System.Int32,RaceDay.API.Dtos.CategoryRequest)">
+            <summary>Adds a category (e.g. 10km, 21km, Under 20) to an event. Owning Organiser only.</summary>
+            <remarks>Body: categoryName, distanceKM, maxParticipants, entryFee.</remarks>
+            <response code="201">Returns the new category ID.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Event not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetCategories(System.Int32)">
+            <summary>Lists all categories for an event (public).</summary>
+            <response code="200">Array of categories.</response>
+            <response code="404">Event not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetEnrolments(System.Int32)">
+            <summary>Lists everyone enrolled in an event. Owning Organiser only.</summary>
+            <response code="200">Array of enrolments with participant and category details.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Event not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.ParticipantsController.History">
+            <summary>Returns the logged-in Participant's full performance history across all past events.</summary>
+            <response code="200">Array of results with event and category context, newest first.</response>
+            <response code="403">Logged in as an Organiser.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.ProfileController.Get">
+            <summary>Returns the profile of the logged-in user (fields depend on their role).</summary>
+            <response code="200">The profile.</response>
+            <response code="401">Not logged in.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.ProfileController.Update(RaceDay.API.Dtos.UpdateProfileRequest)">
+            <summary>Updates the logged-in user's profile.</summary>
+            <remarks>Body: name, email, emergencyContact (participants), organisationName (organisers).</remarks>
+            <response code="200">The updated profile.</response>
+            <response code="400">Invalid fields.</response>
+            <response code="409">Email belongs to another user.</response>
+        </member>
+        <member name="P:RaceDay.API.Dtos.RegisterRequest.Role">
+            <summary>"Organiser" or "Participant".</summary>
+        </member>
+        <member name="P:RaceDay.API.Dtos.RegisterRequest.OrganisationName">
+            <summary>Organisers only (optional).</summary>
+        </member>
+        <member name="P:RaceDay.API.Dtos.RegisterRequest.DateOfBirth">
+            <summary>Participants only (required for Participants; the Part 1 table has it as NOT NULL).</summary>
+        </member>
+        <member name="P:RaceDay.API.Dtos.RegisterRequest.EmergencyContact">
+            <summary>Participants only (optional).</summary>
+        </member>
+        <member name="P:RaceDay.API.Dtos.EventRequest.EventType">
+            <summary>Run, Walk or Cycle.</summary>
+        </member>
+        <member name="T:RaceDay.API.Dtos.EnrolRequest">
+            <summary>Optional body. The server always stamps today's date as the enrolment date.</summary>
+        </member>
+        <member name="P:RaceDay.API.Dtos.ResultRequest.FinishTime">
+            <summary>hh:mm:ss, e.g. "00:52:30". Required when Status is Finished.</summary>
+        </member>
+        <member name="P:RaceDay.API.Dtos.ResultRequest.Status">
+            <summary>Finished, DNF, DNS or Disqualified.</summary>
+        </member>
+        <member name="T:RaceDay.API.Dtos.Mapping">
+            <summary>Reusable projections so controllers return DTOs, never entities (and never password hashes).</summary>
+        </member>
+        <member name="M:RaceDay.API.Dtos.Mapping.Normalise(System.String)">
+            <summary>"run" / "RUN" -> "Run"; keeps stored values consistent.</summary>
+        </member>
+        <member name="M:RaceDay.API.Dtos.Mapping.NormaliseResultStatus(System.String)">
+            <summary>"dnf" -> "DNF"; everything else is title-cased.</summary>
+        </member>
+        <member name="T:RaceDay.API.Migrations.InitialCreate">
+            <inheritdoc />
+        </member>
+        <member name="M:RaceDay.API.Migrations.InitialCreate.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:RaceDay.API.Migrations.InitialCreate.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:RaceDay.API.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="P:RaceDay.API.Models.Event.EventType">
+            <summary>Run, Walk or Cycle (required by the Part 2 brief).</summary>
+        </member>
+        <member name="T:RaceDay.API.Services.JwtService">
+            <summary>Creates signed JWTs carrying the user's ID, name, email and role.</summary>
+        </member>
+        <member name="M:RaceDay.API.Services.JwtService.#ctor(Microsoft.Extensions.Options.IOptions{RaceDay.API.Services.JwtSettings})">
+            <summary>Creates signed JWTs carrying the user's ID, name, email and role.</summary>
+        </member>
+        <member name="T:RaceDay.API.Services.PasswordService">
+            <summary>Hashes and verifies passwords with ASP.NET's salted PBKDF2 hasher. Plain text is never stored.</summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Type)">
+            <summary>
+            Generates a documentation comment ID for a type.
+            Example: T:Namespace.Outer+Inner`1 becomes T:Namespace.Outer.Inner`1
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Reflection.PropertyInfo)">
+            <summary>
+            Generates a documentation comment ID for a property.
+            Example: P:Namespace.ContainingType.PropertyName or for an indexer P:Namespace.ContainingType.Item(System.Int32)
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Type,System.String)">
+            <summary>
+            Generates a documentation comment ID for a property given its container type and property name.
+            Example: P:Namespace.ContainingType.PropertyName
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Reflection.MethodInfo)">
+            <summary>
+            Generates a documentation comment ID for a method (or constructor).
+            For example:
+              M:Namespace.ContainingType.MethodName(ParamType1,ParamType2)~ReturnType
+              M:Namespace.ContainingType.#ctor(ParamType)
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.GetTypeDocId(System.Type,System.Boolean,System.Boolean)">
+            <summary>
+            Generates a documentation ID string for a type.
+            This method handles nested types (replacing '+' with '.'),
+            generic types, arrays, pointers, by-ref types, and generic parameters.
+            The <paramref name="includeGenericArguments"/> flag controls whether
+            constructed generic type arguments are emitted, while <paramref name="omitGenericArity"/>
+            controls whether the generic arity marker (e.g. "`1") is appended.
+            </summary>
+        </member>
+        <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.NormalizeDocId(System.String)">
+            <summary>
+            Normalizes a documentation comment ID to match the compiler-style format.
+            Strips the return type suffix for ordinary methods but retains it for conversion operators.
+            </summary>
+            <param name="docId">The documentation comment ID to normalize.</param>
+            <returns>The normalized documentation comment ID.</returns>
+        </member>
+    </members>
+</doc>
