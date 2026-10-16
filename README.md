@@ -209,5 +209,6 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 Access to role-restricted functionality depends on the authenticated user's assigned role and the API's authorisation rules.
 
 Continuous Integration:
-The project is intended to run automated tests locally and through GitHub Actions CI/CD.
+The project is intended to run automated tests locally and through **GitHub Actions CI/CD**.
 The GitHub Actions workflow should restore dependencies, build the solution, and run the test suite. Successful local test results do not by themselves confirm that the GitHub Actions workflow is configured or passing.
+
