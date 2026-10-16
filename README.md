@@ -1,5 +1,4 @@
-PART 1
-System Description
+## PART 1 - System Description
 
 RaceDay is a full-stack, web-based event management system built for the South African road running, walking, and cycling community.
 It replaces the paper-based registration, spreadsheets, and disconnected communication that many local road events
@@ -65,12 +64,12 @@ JWT Authentication
 xUnit
 ASP.NET Core MVC Testing
 
-## The two roles
-**Organiser** - creates, updates and deletes *their own* events; defines categories for them (name, distance, max
+The two roles:
+Organiser - creates, updates and deletes *their own* events; defines categories for them (name, distance, max
 participants, entry fee); views all enrolments for their events; captures finish time, position and status for
 enrolments in their events. Cannot enrol in events.
 
-**Participant** - browses events and categories; enrols in a category (one enrolment per category, blocked when
+Participant - browses events and categories; enrols in a category (one enrolment per category, blocked when
 the category is full); views and cancels their own enrolments; views their own results and full performance
 history. Cannot create or change events, categories or results.
 
@@ -78,7 +77,7 @@ Anyone can register as either role (the role is chosen at registration). Browsin
 everything else requires login, and role/ownership is checked on every protected endpoint
 (401 = not logged in, 403 = wrong role or not the owner).
 
-## Setup and run
+Setup and run:
 1. Install Visual Studio with the ASP.NET workload, .NET SDK matching the project, and SQL Server (LocalDB is fine).
 2. Clone the repo and open `RaceDay_API.slnx` (or the solution in the Part 2 folder).
 3. Check `ConnectionStrings:DefaultConnection` in `RaceDay.API/appsettings.json` points at your SQL Server.
@@ -91,7 +90,7 @@ everything else requires login, and role/ownership is checked on every protected
 6. In Swagger: `POST /api/auth/register`, then `POST /api/auth/login`. The browser keeps the session cookie,
    so every later "Try it out" call in that tab is authenticated. Use `POST /api/auth/logout` to switch user.
 
-## Endpoints (from the Part 1 plan)
+Endpoints (from the Part 1 plan)
 | # | Method | Route | Access |
 |---|---|---|---|
 | 1 | POST | /api/auth/register | Public |
@@ -117,28 +116,21 @@ everything else requires login, and role/ownership is checked on every protected
 
 Extra: `POST /api/auth/logout` ends the session.
 
-# RaceDay API integration tests
-
+RaceDay API integration tests:
 These tests exercise the API through HTTP using `WebApplicationFactory<Program>`. They cover:
-
 - Registration and login, including invalid credentials.
 - Anonymous requests to protected endpoints.
 - Organiser-only event creation and event ownership checks.
 - Participant-only enrolment and checking that the enrolment is returned by the participant's enrolment endpoint.
 - Wrong-role rejection and duplicate enrolment.
-
 The test host replaces SQL Server with a uniquely named EF Core InMemory database, so tests do not require a local SQL Server instance.
-
-## Run locally
-
+Run locally
 From the solution folder:
-
 ```bash
 dotnet restore RaceDay.API.slnx
 dotnet test RaceDay.API.slnx --configuration Release
 ```
-
 The test project uses the .NET 10 target framework to match the API. These tests still need to be run on a machine with the .NET 10 SDK installed; they have not been executed in this environment.
 
-## CI/CD
+CI/CD:
 `.github/workflows/ci.yml` restores, builds and runs all unit tests on every push.
