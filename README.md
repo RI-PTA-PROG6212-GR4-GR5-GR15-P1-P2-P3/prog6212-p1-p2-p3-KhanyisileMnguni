@@ -177,6 +177,15 @@ dotnet restore RaceDay.API.slnx
 dotnet test RaceDay.API.slnx --configuration Release
 ```
 The test project uses the .NET 10 target framework to match the API. These tests still need to be run on a machine with the .NET 10 SDK installed; they have not been executed in this environment.
+Test Coverage
+The current local test run completed successfully with 5 tests passed, 0 failed, and 0 skipped.
+Authentication and Authorisation
+Protected endpoints require a valid JWT access token where authentication is enforced.
 
-CI/CD:
-`.github/workflows/ci.yml` restores, builds and runs all unit tests on every push.
+Include the token in the HTTP request's Authorization header:
+Authorization: Bearer YOUR_ACCESS_TOKEN
+Access to role-restricted functionality depends on the authenticated user's assigned role and the API's authorisation rules.
+
+Continuous Integration:
+The project is intended to run automated tests locally and through GitHub Actions CI/CD.
+The GitHub Actions workflow should restore dependencies, build the solution, and run the test suite. Successful local test results do not by themselves confirm that the GitHub Actions workflow is configured or passing.
