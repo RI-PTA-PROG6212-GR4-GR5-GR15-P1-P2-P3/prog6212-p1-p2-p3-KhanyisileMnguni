@@ -1,0 +1,49 @@
+name: RaceDay.API CI
+
+# Builds the API and runs all unit tests on every push and pull request.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOPT_OUT: true
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # Finds the projects by name, so it works whatever your folders are called
+      # and does not depend on the .sln / .slnx file listing the test project.
+      - name: Locate the test project
+        run: |
+          echo "All project files in the repo:"
+          find . -name "*.csproj" -not -path "*/obj/*" -not -path "*/bin/*"
+          TEST_PROJECT=$(find . -name "*Tests.csproj" -not -path "*/obj/*" -not -path "*/bin/*" | head -n 1)
+          if [ -z "$TEST_PROJECT" ]; then
+            echo "::error::No *Tests.csproj found. Is the test project committed?"
+            exit 1
+          fi
+          echo "Using test project: $TEST_PROJECT"
+          echo "TEST_PROJECT=$TEST_PROJECT" >> "$GITHUB_ENV"
+
+      # The test project references the API project, so restoring/building it
+      # restores and builds the API too.
+      - name: Restore
+        run: dotnet restore "$TEST_PROJECT"
+
+      - name: Build
+        run: dotnet build "$TEST_PROJECT" --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test "$TEST_PROJECT" --no-build --configuration Release --verbosity normal
