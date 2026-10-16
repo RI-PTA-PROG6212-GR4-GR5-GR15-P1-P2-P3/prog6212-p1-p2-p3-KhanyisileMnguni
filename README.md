@@ -44,17 +44,17 @@ validating that the /docs folder exists and contains the ERD, API endpoint plan,
 
 # Part 2 - RaceDay RESTful API
 
-ASP.NET Core Web API (C#) that powers the RaceDay system, built to the Part 1 plan
-(`docs/` - ERD, API endpoint plan, SQL script).
+A RESTful API for managing race events, participants, event enrolments, and user authentication. The API uses role-based access control to help ensure that users can only access functionality permitted by their assigned roles.
 
-**Demo video (unlisted YouTube):** <PASTE YOUR YOUTUBE LINK HERE>
-
-## Tech
-- ASP.NET Core Web API, Entity Framework Core (Code-First) on SQL Server
-- Session authentication (HttpOnly auth cookie holding the user's ID and role), role-based `[Authorize]`
-- Passwords hashed with ASP.NET's salted PBKDF2 `PasswordHasher` - the original password is never stored
-- Swagger UI with XML-documented endpoints
-- xUnit tests (in-memory database via `WebApplicationFactory`) and GitHub Actions CI
+## Features:
+User Authentication: User registration and login using JWT (JSON Web Token) authentication.
+Role-Based Access Control: Restricts protected endpoints according to user roles.
+Event Management: Allows authorised Organisers to manage race events.
+Event Enrolments: Allows Participants to enrol in events.
+Categories: Provides functionality for managing event categories.
+Participant Management: Supports participant-related operations.
+Profile Management: Provides profile-related functionality.
+Automated Testing: Includes integration tests for authentication, event management, enrolments, and role-based access.
 
 ## The two roles
 **Organiser** - creates, updates and deletes *their own* events; defines categories for them (name, distance, max
@@ -108,13 +108,28 @@ everything else requires login, and role/ownership is checked on every protected
 
 Extra: `POST /api/auth/logout` ends the session.
 
-## Running the tests
+# RaceDay API integration tests
+
+These tests exercise the API through HTTP using `WebApplicationFactory<Program>`. They cover:
+
+- Registration and login, including invalid credentials.
+- Anonymous requests to protected endpoints.
+- Organiser-only event creation and event ownership checks.
+- Participant-only enrolment and checking that the enrolment is returned by the participant's enrolment endpoint.
+- Wrong-role rejection and duplicate enrolment.
+
+The test host replaces SQL Server with a uniquely named EF Core InMemory database, so tests do not require a local SQL Server instance.
+
+## Run locally
+
+From the solution folder:
+
+```bash
+dotnet restore RaceDay.API.slnx
+dotnet test RaceDay.API.slnx --configuration Release
 ```
-dotnet test RaceDay.API.Tests/RaceDay.API.Tests.csproj
-```
-Tests cover registration and login (success and failure), unauthenticated access, Organiser event management,
-Participants being rejected from Organiser functionality (and vice versa), enrolments being recorded correctly,
-full/duplicate enrolments, and result capture/viewing.
+
+The test project uses the .NET 10 target framework to match the API. These tests still need to be run on a machine with the .NET 10 SDK installed; they have not been executed in this environment.
 
 ## CI/CD
 `.github/workflows/ci.yml` restores, builds and runs all unit tests on every push.
