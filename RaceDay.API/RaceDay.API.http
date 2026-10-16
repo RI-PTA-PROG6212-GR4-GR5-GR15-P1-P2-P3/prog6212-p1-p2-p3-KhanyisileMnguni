@@ -1,0 +1,127 @@
+@host = https://localhost:7288
+
+### 1. Register Organiser (change the email if you run this twice: a repeat gives 409)
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test Organiser",
+  "email": "organiser20@raceday.com",
+  "password": "Password123!",
+  "role": "Organiser",
+  "organisationName": "RaceDay Events"
+}
+
+### 2. Login Organiser (the token is reused by the requests below)
+# @name orgLogin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "organiser10@raceday.com",
+  "password": "Password123!"
+}
+
+### 3. Get Organiser profile
+GET {{host}}/api/profile
+Authorization: Bearer {{orgLogin.response.body.$.token}}
+
+### 4. Create event (eventType must be Run, Walk or Cycle)
+# @name createEvent
+POST {{host}}/api/events
+Authorization: Bearer {{orgLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventName": "Centurion Sunrise Run",
+  "eventType": "Run",
+  "eventDate": "2027-10-15",
+  "location": "Centurion, Gauteng",
+  "description": "A community road running event."
+}
+
+### 5. Add a category to the event
+# @name createCategory
+POST {{host}}/api/events/{{createEvent.response.body.$.eventId}}/categories
+Authorization: Bearer {{orgLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "categoryName": "10km Road Race",
+  "distanceKM": 10,
+  "maxParticipants": 200,
+  "entryFee": 150
+}
+
+### 6. Browse events (public, no token needed)
+GET {{host}}/api/events
+
+### 7. Register Participant
+POST {{host}}/api/auth/register
+Content-Type: application/json
+
+{
+  "name": "Test Participant",
+  "email": "participant20@raceday.com",
+  "password": "Password123!",
+  "role": "Participant",
+  "dateOfBirth": "1995-05-24",
+  "emergencyContact": "082 555 0102"
+}
+
+### 8. Login Participant
+# @name partLogin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "participant10@raceday.com",
+  "password": "Password123!"
+}
+
+### 9. Participant enrols in the category
+# @name enrol
+POST {{host}}/api/categories/{{createCategory.response.body.$.categoryId}}/enrolments
+Authorization: Bearer {{partLogin.response.body.$.token}}
+
+### 10. Organiser views enrolments for the event
+GET {{host}}/api/events/{{createEvent.response.body.$.eventId}}/enrolments
+Authorization: Bearer {{orgLogin.response.body.$.token}}
+
+### 11. Organiser captures the result
+POST {{host}}/api/enrolments/{{enrol.response.body.$.enrolmentId}}/result
+Authorization: Bearer {{orgLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "finishTime": "00:52:30",
+  "position": 14,
+  "status": "Finished"
+}
+
+### 12. Participant views their own result
+GET {{host}}/api/enrolments/{{enrol.response.body.$.enrolmentId}}/result
+Authorization: Bearer {{partLogin.response.body.$.token}}
+
+### 13. Participant performance history
+GET {{host}}/api/participants/me/history
+Authorization: Bearer {{partLogin.response.body.$.token}}
+
+### 14. Role check: a Participant must NOT create events (expect 403)
+POST {{host}}/api/events
+Authorization: Bearer {{partLogin.response.body.$.token}}
+Content-Type: application/json
+
+{
+  "eventName": "Should fail",
+  "eventType": "Run",
+  "eventDate": "2027-10-15",
+  "location": "Nowhere"
+}
+
+### 15. Role check: an Organiser must NOT enrol (expect 403)
+POST {{host}}/api/categories/{{createCategory.response.body.$.categoryId}}/enrolments
+Authorization: Bearer {{orgLogin.response.body.$.token}}
+
+### 16. No token at all (expect 401)
+GET {{host}}/api/profile
