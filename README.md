@@ -64,6 +64,36 @@ JWT Authentication
 xUnit
 ASP.NET Core MVC Testing
 
+Project Structure:
+RaceDay.API/
+├── Controllers/
+│   ├── AuthController.cs
+│   ├── CategoriesController.cs
+│   ├── EnrolmentController.cs
+│   ├── EventController.cs
+│   └── ParticipantController.cs
+├── Data/
+│   └── AppDbContext.cs
+├── Dtos/
+├── Migrations/
+├── Models/
+├── Services/
+│   ├── JwtService.cs
+│   └── PasswordService.cs
+├── Program.cs
+└── appsettings.json
+
+RaceDay.API.Tests/
+├── AuthTests.cs
+├── CategoryTests.cs
+├── EnrolmentTests.cs
+├── EventTests.cs
+├── ProfileTests.cs
+├── ResultTests.cs
+├── RoleAccessTests.cs
+├── RuleTests.cs
+└── TestSupport.cs
+
 The two roles:
 Organiser - creates, updates and deletes *their own* events; defines categories for them (name, distance, max
 participants, entry fee); views all enrolments for their events; captures finish time, position and status for
@@ -76,6 +106,22 @@ history. Cannot create or change events, categories or results.
 Anyone can register as either role (the role is chosen at registration). Browsing events/categories is public;
 everything else requires login, and role/ownership is checked on every protected endpoint
 (401 = not logged in, 403 = wrong role or not the owner).
+
+Prerequisites:
+Before running the project, ensure that you have installed:
+Visual Studio 2022 or a compatible IDE that supports .NET 10.
+The .NET 10 SDK.
+Microsoft SQL Server.
+SQL Server Management Studio (SSMS) or another suitable database management tool.
+Git.
+
+Installation:
+Clone the repository:
+git clone <YOUR_GITHUB_REPOSITORY_URL>
+Navigate to the solution directory:
+cd RaceDay.API
+Open the solution file in Visual Studio.
+Restore the project's NuGet packages.
 
 Setup and run:
 1. Install Visual Studio with the ASP.NET workload, .NET SDK matching the project, and SQL Server (LocalDB is fine).
