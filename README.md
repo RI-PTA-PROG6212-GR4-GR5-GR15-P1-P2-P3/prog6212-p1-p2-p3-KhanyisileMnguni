@@ -176,6 +176,13 @@ JWT Configuration:
 Configure the JWT settings expected by the application in appsettings.json or your development environment's configuration.
 Use a secure signing key of at least 32 characters, as required by the application. Do not commit real signing keys or production secrets to GitHub.
 
+Run the API:
+In Visual Studio, set RaceDay.API as the startup project and run the application.
+Alternatively, from the directory containing RaceDay.API.csproj, execute:
+dotnet restore
+dotnet run
+The application will display the local address where the API is running.
+
 RaceDay API integration tests:
 These tests exercise the API through HTTP using `WebApplicationFactory<Program>`. They cover:
 - Registration and login, including invalid credentials.
