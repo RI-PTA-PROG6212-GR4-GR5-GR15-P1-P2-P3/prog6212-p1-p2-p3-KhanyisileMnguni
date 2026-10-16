@@ -162,6 +162,20 @@ Endpoints (from the Part 1 plan)
 
 Extra: `POST /api/auth/logout` ends the session.
 
+Database Configuration:
+Configure the database connection string in appsettings.json or through your development environment's configuration settings.
+Example connection string:
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "YOUR_SQL_SERVER_CONNECTION_STRING"
+  }
+}
+Replace the placeholder with your actual SQL Server connection string. Keep private credentials and production connection details out of source control.
+
+JWT Configuration:
+Configure the JWT settings expected by the application in appsettings.json or your development environment's configuration.
+Use a secure signing key of at least 32 characters, as required by the application. Do not commit real signing keys or production secrets to GitHub.
+
 RaceDay API integration tests:
 These tests exercise the API through HTTP using `WebApplicationFactory<Program>`. They cover:
 - Registration and login, including invalid credentials.
