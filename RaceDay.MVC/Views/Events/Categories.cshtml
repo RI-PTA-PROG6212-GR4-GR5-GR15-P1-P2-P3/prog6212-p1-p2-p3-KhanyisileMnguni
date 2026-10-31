@@ -1,0 +1,91 @@
+﻿
+@model List<RaceDay.MVC.Models.CategoryViewModel>
+
+@{
+    ViewData["Title"] = "Event Categories";
+}
+
+<div class="container mt-4">
+
+    <h1>Available Event Categories</h1>
+
+    @if (TempData["Message"] != null)
+    {
+      <div class="alert alert-info">
+            @TempData["Message"]
+      </div>
+    }
+
+    <div class="row mt-4">
+
+        @foreach (var category in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            @category.CategoryName
+                        </h5>
+
+                        <p>
+                            <strong>Distance:</strong>
+                            @category.DistanceKM km
+                        </p>
+
+                        <p>
+                            <strong>Maximum Participants:</strong>
+                            @category.MaxParticipants
+                        </p>
+
+                        <p>
+                            <strong>Entry Fee:</strong>
+                            R @category.EntryFee
+                        </p>
+
+                        @if (Context.Session.GetString("Role") == "Participant")
+                        {
+                            <form asp-controller="Events"
+                                  asp-action="Enrol"
+                                  method="post">
+
+                                @Html.AntiForgeryToken()
+
+                                <input type="hidden"
+                                       name="categoryId"
+                                       value="@category.CategoryID" />
+
+                                <input type="hidden"
+                                       name="eventId"
+                                       value="@category.EventID" />
+
+                                <button type="submit"
+                                        class="btn btn-primary w-100">
+                                    Enrol Now
+                                </button>
+
+                            </form>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning">
+            No categories are currently available for this event.
+        </div>
+    }
+
+    <a asp-controller="Events"
+       asp-action="Index"
+       class="btn btn-secondary mt-3">
+        Back to Events
+    </a>
+
+</div>

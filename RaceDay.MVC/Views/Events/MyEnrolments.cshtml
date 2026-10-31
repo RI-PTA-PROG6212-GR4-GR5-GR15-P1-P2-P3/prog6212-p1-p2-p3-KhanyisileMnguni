@@ -1,0 +1,114 @@
+﻿@model List<RaceDay.MVC.Models.EnrolmentViewModel>
+
+@{
+    ViewData["Title"] = "My Enrolments";
+}
+
+<div class="container mt-5">
+
+    <h2 class="mb-4">My Enrolments</h2>
+
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-info">
+            @TempData["Message"]
+        </div>
+    }
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            You have not enrolled in any events yet.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var enrolment in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @enrolment.EventName
+                            </h5>
+
+                            <p>
+                                <strong>Category:</strong>
+                                @enrolment.CategoryName
+                            </p>
+
+                            <p>
+                                <strong>Distance:</strong>
+                                @enrolment.DistanceKm km
+                            </p>
+
+                            <p>
+                                <strong>Entry Fee:</strong>
+                                R @enrolment.EntryFee
+                            </p>
+
+                            <p>
+                                <strong>Event Date:</strong>
+                                @enrolment.EventDate
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                @enrolment.Location
+                            </p>
+
+                            <p>
+                                <strong>Enrolment Date:</strong>
+                                @enrolment.EnrolmentDate
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                <span class="badge bg-primary">
+                                    @enrolment.Status
+                                </span>
+                            </p>
+
+                            @if (enrolment.Status == "Enrolled")
+                            {
+                                <form asp-controller="Events"
+                                      asp-action="CancelEnrolment"
+                                      method="post"
+                                      onsubmit="return confirm('Are you sure you want to cancel this enrolment?');">
+
+                                    @Html.AntiForgeryToken()
+
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@enrolment.EnrolmentId" />
+
+                                    <button type="submit"
+                                            class="btn btn-outline-danger w-100">
+                                        Cancel Enrolment
+                                    </button>
+
+                                </form>
+                            }
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+    <a asp-controller="Events"
+       asp-action="Index"
+       class="btn btn-secondary mt-3">
+        Back to Events
+    </a>
+
+</div>

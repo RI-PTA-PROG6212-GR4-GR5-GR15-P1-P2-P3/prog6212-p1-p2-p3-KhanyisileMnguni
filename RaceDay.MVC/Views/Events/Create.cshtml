@@ -1,0 +1,45 @@
+﻿@model RaceDay.MVC.Models.EventViewModel
+
+@{
+    ViewData["Title"] = "Create Event";
+}
+
+<div class="container mt-4">
+    <h1>Create a RaceDay Event</h1>
+
+    <form asp-action="Create" method="post">
+        <div asp-validation-summary="All" class="text-danger"></div>
+
+        <div class="mb-3">
+            <label asp-for="EventName">Event Name</label>
+            <input asp-for="EventName" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EventDate">Event Date</label>
+            <input asp-for="EventDate" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Location"></label>
+            <input asp-for="Location" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="EventType" class="form-label">Event Type</label>
+            <select asp-for="EventType" class="form-select">
+                <option value="Run">Run</option>
+                <option value="Walk">Walk</option>
+                <option value="Race">Race</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description"></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Event</button>
+        <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>

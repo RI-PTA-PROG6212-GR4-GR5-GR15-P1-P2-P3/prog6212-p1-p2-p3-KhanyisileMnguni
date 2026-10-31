@@ -1,0 +1,31 @@
+﻿@{
+    ViewData["Title"] = "Organiser Dashboard";
+}
+
+<div class="container mt-4">
+    <h1>Welcome, @Context.Session.GetString("Name")!</h1>
+    <p>Organiser Dashboard</p>
+
+    <div class="row mt-4">
+        <div class="col-md-6 mb-3">
+            <div class="card p-4">
+                <h4>Manage Events</h4>
+                <p>Create and manage your RaceDay events.</p>
+                <a asp-controller="Events" asp-action="Create"
+                   class="btn btn-primary">Create Event</a>
+            </div>
+        </div>
+
+        <div class="col-md-6 mb-3">
+            <div class="card p-4">
+                <h4>Browse Events</h4>
+                <p>View upcoming RaceDay events.</p>
+                <a asp-controller="Events" asp-action="Index"
+                   class="btn btn-outline-primary">View Events</a>
+            </div>
+        </div>
+    </div>
+
+    <a asp-controller="Account" asp-action="Logout"
+       class="btn btn-outline-danger mt-3">Logout</a>
+</div>

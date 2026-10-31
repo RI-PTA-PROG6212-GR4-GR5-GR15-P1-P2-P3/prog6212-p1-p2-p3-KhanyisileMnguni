@@ -1,0 +1,92 @@
+is_global = true
+build_property.TargetFramework = net10.0
+build_property.TargetFrameworkIdentifier = .NETCoreApp
+build_property.TargetFrameworkVersion = v10.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property.EntryPointFilePath = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = RaceDay.MVC
+build_property.RootNamespace = RaceDay.MVC
+build_property.ProjectDir = C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\
+build_property.EnableComHosting = 
+build_property.EnableGeneratedComInterfaceComImportInterop = 
+build_property.RazorLangVersion = 10.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC
+build_property._RazorSourceGeneratorDebug = 
+build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EnableCodeStyleSeverity = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Account/Register.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxSZWdpc3Rlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Dashboard/Organiser.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXE9yZ2FuaXNlci5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Dashboard/Participant.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFBhcnRpY2lwYW50LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/AddCategory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXEFkZENhdGVnb3J5LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/CaptureResult.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXENhcHR1cmVSZXN1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/Categories.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXENhdGVnb3JpZXMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXENyZWF0ZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/EditResult.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXEVkaXRSZXN1bHQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/ManageParticipants.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXE1hbmFnZVBhcnRpY2lwYW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/MyEnrolments.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXE15RW5yb2xtZW50cy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/MyHistory.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXE15SGlzdG9yeS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/mngun/OneDrive/Documents/GitHub/prog6212-p1-p2-p3-KhanyisileMnguni/RaceDay.MVC/Views/Events/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXZlbnRzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = b-mifn02v2ve

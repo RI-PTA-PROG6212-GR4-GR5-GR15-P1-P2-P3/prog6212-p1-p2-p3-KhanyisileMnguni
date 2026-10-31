@@ -1,0 +1,50 @@
+﻿@model RaceDay.MVC.Models.RegisterViewModel
+
+<h2>Create a RaceDay Account</h2>
+
+<form asp-action="Register" method="post">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Password"></label>
+        <input asp-for="Password" type="password" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="Role">Account Type</label>
+        <select asp-for="Role" class="form-select">
+            <option value="">Select role</option>
+            <option value="Organiser">Organiser</option>
+            <option value="Participant">Participant</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="OrganisationName">Organisation Name</label>
+        <input asp-for="OrganisationName" class="form-control"
+               placeholder="Organiser only" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="DateOfBirth">Date of Birth</label>
+        <input asp-for="DateOfBirth" type="date" class="form-control" />
+        <small>Required for Participants.</small>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="EmergencyContact">Emergency Contact</label>
+        <input asp-for="EmergencyContact" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-success">Register</button>
+</form>

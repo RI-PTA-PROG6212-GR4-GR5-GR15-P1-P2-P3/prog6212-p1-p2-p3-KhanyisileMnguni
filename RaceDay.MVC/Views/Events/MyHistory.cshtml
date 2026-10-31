@@ -1,0 +1,95 @@
+﻿@model List<RaceDay.MVC.Models.HistoryViewModel>
+
+@{
+    ViewData["Title"] = "My History";
+}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">My Race History</h2>
+
+    @if (Model == null || !Model.Any())
+    {
+        <div class="alert alert-info">
+            You don't have any recorded race results yet.
+        </div>
+    }
+    else
+    {
+        <div class="row">
+
+            @foreach (var race in Model)
+            {
+                <div class="col-md-6 col-lg-4 mb-4">
+
+                    <div class="card h-100 shadow-sm">
+
+                        <div class="card-body">
+
+                            <h5 class="card-title">
+                                @race.EventName
+                            </h5>
+
+                            <p>
+                                <strong>Category:</strong>
+                                @race.CategoryName
+                            </p>
+
+                            <p>
+                                <strong>Distance:</strong>
+                                @race.DistanceKm km
+                            </p>
+
+                            <p>
+                                <strong>Event Date:</strong>
+                                @race.EventDate
+                            </p>
+
+                            <p>
+                                <strong>Location:</strong>
+                                @race.Location
+                            </p>
+
+                            <hr />
+
+                            <h6>Race Results</h6>
+
+                            <p>
+                                <strong>Finish Time:</strong>
+                                @(race.FinishTime?.ToString(@"hh\:mm\:ss") ?? "Not recorded")
+                            </p>
+
+                            <p>
+                                <strong>Position:</strong>
+                                @(race.Position?.ToString() ?? "Not recorded")
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                <span class="badge bg-primary">
+                                    @race.Status
+                                </span>
+                            </p>
+
+                            <p>
+                                <strong>Total Finishers:</strong>
+                                @race.TotalFinishers
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+    <a asp-controller="Events"
+       asp-action="Index"
+       class="btn btn-secondary mt-3">
+        Back to Events
+    </a>
+
+</div>
