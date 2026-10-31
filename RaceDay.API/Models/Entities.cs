@@ -1,4 +1,4 @@
-﻿namespace RaceDay.API.Models;
+namespace RaceDay.API.Models;
 
 public class Organiser
 {
@@ -18,6 +18,8 @@ public class Participant
     public string Password { get; set; } = null!;   // stores the HASH, never the original
     public DateOnly DateOfBirth { get; set; }
     public string? EmergencyContact { get; set; }
+    /// <summary>Full URL of the profile picture in Azure Blob Storage (the image itself is not stored in SQL).</summary>
+    public string? ProfilePictureUrl { get; set; }
     public List<Enrolment> Enrolments { get; set; } = new();
 }
 
@@ -31,6 +33,8 @@ public class Event
     public DateOnly EventDate { get; set; }
     public string Location { get; set; } = null!;
     public string? Description { get; set; }
+    /// <summary>Full URL of the banner image in Azure Blob Storage (the image itself is not stored in SQL).</summary>
+    public string? BannerUrl { get; set; }
     public Organiser Organiser { get; set; } = null!;
     public List<Category> Categories { get; set; } = new();
 }

@@ -6,7 +6,7 @@ Content-Type: application/json
 
 {
   "name": "Test Organiser",
-  "email": "organiser20@raceday.com",
+  "email": "organiser40@raceday.com",
   "password": "Password123!",
   "role": "Organiser",
   "organisationName": "RaceDay Events"
@@ -18,7 +18,7 @@ POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "organiser10@raceday.com",
+  "email": "organiser40@raceday.com",
   "password": "Password123!"
 }
 
@@ -62,7 +62,7 @@ Content-Type: application/json
 
 {
   "name": "Test Participant",
-  "email": "participant20@raceday.com",
+  "email": "participant60@raceday.com",
   "password": "Password123!",
   "role": "Participant",
   "dateOfBirth": "1995-05-24",
@@ -75,7 +75,7 @@ POST {{host}}/api/auth/login
 Content-Type: application/json
 
 {
-  "email": "participant10@raceday.com",
+  "email": "participant60@raceday.com",
   "password": "Password123!"
 }
 

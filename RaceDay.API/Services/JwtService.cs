@@ -1,4 +1,4 @@
-﻿using System.Security.Claims;
+using System.Security.Claims;
 using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
@@ -32,7 +32,9 @@ public class JwtService(IOptions<JwtSettings> options)
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
                 new Claim(ClaimTypes.Name, name),
                 new Claim(ClaimTypes.Email, email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
+                // Unique ID for this token, so logout can revoke exactly this one.
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             }),
             Issuer = _settings.Issuer,
             Audience = _settings.Audience,

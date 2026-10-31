@@ -27,6 +27,15 @@
             <response code="200">Returns the JWT token, its expiry, and the user ID, role and name.</response>
             <response code="401">Invalid credentials.</response>
         </member>
+        <member name="M:RaceDay.API.Controllers.AuthController.Logout">
+            <summary>Logs the user out: the token used for this request stops working immediately.</summary>
+            <remarks>
+            The API remembers the token's unique ID, so any later request that uses the same token gets 401.
+            The client should also discard the token. Other tokens (for example a login on another device) are not affected.
+            </remarks>
+            <response code="204">Logged out.</response>
+            <response code="401">Not logged in, or the token was already logged out.</response>
+        </member>
         <member name="M:RaceDay.API.Controllers.CategoriesController.Update(System.Int32,RaceDay.API.Dtos.CategoryRequest)">
             <summary>Updates a category. Only the Organiser who owns its event may do this.</summary>
             <response code="200">The updated category.</response>
@@ -68,7 +77,15 @@
             <response code="400">Invalid fields.</response>
             <response code="403">The enrolment is not in one of your events.</response>
             <response code="404">Enrolment not found.</response>
-            <response code="409">A result already exists for this enrolment.</response>
+            <response code="409">A result already exists for this enrolment (use PUT to correct it).</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EnrolmentsController.UpdateResult(System.Int32,RaceDay.API.Dtos.ResultRequest)">
+            <summary>Corrects an existing result. Owning Organiser only.</summary>
+            <remarks>Same body as capturing a result. Use this when a time or position was entered wrongly.</remarks>
+            <response code="200">The updated result.</response>
+            <response code="400">Invalid fields.</response>
+            <response code="403">The enrolment is not in one of your events.</response>
+            <response code="404">Enrolment not found, or no result captured yet.</response>
         </member>
         <member name="M:RaceDay.API.Controllers.EnrolmentsController.GetResult(System.Int32)">
             <summary>Returns the result for an enrolment: the Participant who owns it, or the Organiser of its event.</summary>
@@ -83,9 +100,18 @@
             <response code="401">Not logged in.</response>
             <response code="403">Logged in as a Participant.</response>
         </member>
-        <member name="M:RaceDay.API.Controllers.EventsController.GetAll(System.Boolean)">
-            <summary>Lists upcoming events (public). Add ?includePast=true to include events that have already happened.</summary>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetAll(System.Boolean,System.String,System.String,System.String,System.Nullable{System.DateOnly},System.Nullable{System.DateOnly})">
+            <summary>Lists upcoming events (public), with optional filters.</summary>
+            <remarks>
+            All filters are optional and can be combined: eventType (Run / Walk / Cycle), search (matches the name or description),
+            location (matches part of the location), fromDate and toDate (yyyy-MM-dd). Add includePast=true to include events that have already happened.
+            </remarks>
             <response code="200">Array of events, soonest first.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetMine">
+            <summary>Dashboard data: every event the logged-in Organiser created, with category and enrolment totals.</summary>
+            <response code="200">Array of the Organiser's own events (past and upcoming), soonest first.</response>
+            <response code="403">Logged in as a Participant.</response>
         </member>
         <member name="M:RaceDay.API.Controllers.EventsController.GetById(System.Int32)">
             <summary>Returns full details of one event, including its categories (public).</summary>
@@ -99,11 +125,24 @@
             <response code="404">Event not found.</response>
         </member>
         <member name="M:RaceDay.API.Controllers.EventsController.Delete(System.Int32)">
-            <summary>Deletes an event and its categories. Only the owning Organiser may do this.</summary>
+            <summary>Deletes an event and its categories (and its banner image). Only the owning Organiser may do this.</summary>
             <response code="204">Deleted.</response>
             <response code="403">Not the owning Organiser.</response>
             <response code="404">Event not found.</response>
             <response code="409">Participants are already enrolled, so the event cannot be deleted.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.UploadBanner(System.Int32,Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>Uploads (or replaces) the banner image of an event. Owning Organiser only. Stored in Azure Blob Storage.</summary>
+            <remarks>Send a multipart form with one file field named "file". JPG, PNG, GIF or WEBP, up to 5 MB.</remarks>
+            <response code="200">Saved. Url is the route that serves the banner.</response>
+            <response code="400">Not a valid image, wrong type, or too large.</response>
+            <response code="403">Not the owning Organiser.</response>
+            <response code="404">Event not found.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.EventsController.GetBanner(System.Int32)">
+            <summary>Returns the banner image of an event (the image itself, public).</summary>
+            <response code="200">The image.</response>
+            <response code="404">The event does not exist or has no banner.</response>
         </member>
         <member name="M:RaceDay.API.Controllers.EventsController.AddCategory(System.Int32,RaceDay.API.Dtos.CategoryRequest)">
             <summary>Adds a category (e.g. 10km, 21km, Under 20) to an event. Owning Organiser only.</summary>
@@ -118,13 +157,14 @@
             <response code="404">Event not found.</response>
         </member>
         <member name="M:RaceDay.API.Controllers.EventsController.GetEnrolments(System.Int32)">
-            <summary>Lists everyone enrolled in an event. Owning Organiser only.</summary>
-            <response code="200">Array of enrolments with participant and category details.</response>
+            <summary>Lists everyone enrolled in an event, with any result already captured. Owning Organiser only.</summary>
+            <response code="200">Array of enrolments with participant, category and result details.</response>
             <response code="403">Not the owning Organiser.</response>
             <response code="404">Event not found.</response>
         </member>
         <member name="M:RaceDay.API.Controllers.ParticipantsController.History">
             <summary>Returns the logged-in Participant's full performance history across all past events.</summary>
+            <remarks>Each item includes the finishing position and totalFinishers (everyone who finished in that category), e.g. "47th of 312".</remarks>
             <response code="200">Array of results with event and category context, newest first.</response>
             <response code="403">Logged in as an Organiser.</response>
         </member>
@@ -139,6 +179,18 @@
             <response code="200">The updated profile.</response>
             <response code="400">Invalid fields.</response>
             <response code="409">Email belongs to another user.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.ProfileController.UploadPicture(Microsoft.AspNetCore.Http.IFormFile)">
+            <summary>Uploads (or replaces) the logged-in Participant's profile picture. Stored in Azure Blob Storage.</summary>
+            <remarks>Send a multipart form with one file field named "file". JPG, PNG, GIF or WEBP, up to 5 MB.</remarks>
+            <response code="200">Saved. Url is the route that serves the picture.</response>
+            <response code="400">Not a valid image, wrong type, or too large.</response>
+            <response code="403">Logged in as an Organiser.</response>
+        </member>
+        <member name="M:RaceDay.API.Controllers.ProfileController.GetPicture">
+            <summary>Returns the logged-in Participant's profile picture (the image itself).</summary>
+            <response code="200">The image.</response>
+            <response code="404">No picture uploaded yet.</response>
         </member>
         <member name="P:RaceDay.API.Dtos.RegisterRequest.Role">
             <summary>"Organiser" or "Participant".</summary>
@@ -164,6 +216,18 @@
         <member name="P:RaceDay.API.Dtos.ResultRequest.Status">
             <summary>Finished, DNF, DNS or Disqualified.</summary>
         </member>
+        <member name="T:RaceDay.API.Dtos.OrganiserEventSummaryResponse">
+            <summary>One row of the Organiser dashboard.</summary>
+        </member>
+        <member name="M:RaceDay.API.Dtos.OrganiserEventSummaryResponse.#ctor(System.Int32,System.String,System.String,System.DateOnly,System.String,System.Int32,System.Int32,System.Boolean)">
+            <summary>One row of the Organiser dashboard.</summary>
+        </member>
+        <member name="T:RaceDay.API.Dtos.ImageUploadResponse">
+            <summary>Returned after an image upload. Url is an API route that serves the image.</summary>
+        </member>
+        <member name="M:RaceDay.API.Dtos.ImageUploadResponse.#ctor(System.Boolean,System.String)">
+            <summary>Returned after an image upload. Url is an API route that serves the image.</summary>
+        </member>
         <member name="T:RaceDay.API.Dtos.Mapping">
             <summary>Reusable projections so controllers return DTOs, never entities (and never password hashes).</summary>
         </member>
@@ -185,8 +249,68 @@
         <member name="M:RaceDay.API.Migrations.InitialCreate.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
+        <member name="T:RaceDay.API.Migrations.AddBlobImages">
+            <inheritdoc />
+        </member>
+        <member name="M:RaceDay.API.Migrations.AddBlobImages.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:RaceDay.API.Migrations.AddBlobImages.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:RaceDay.API.Migrations.AddBlobImages.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="P:RaceDay.API.Models.Participant.ProfilePictureUrl">
+            <summary>Full URL of the profile picture in Azure Blob Storage (the image itself is not stored in SQL).</summary>
+        </member>
         <member name="P:RaceDay.API.Models.Event.EventType">
             <summary>Run, Walk or Cycle (required by the Part 2 brief).</summary>
+        </member>
+        <member name="P:RaceDay.API.Models.Event.BannerUrl">
+            <summary>Full URL of the banner image in Azure Blob Storage (the image itself is not stored in SQL).</summary>
+        </member>
+        <member name="T:RaceDay.API.Services.BlobStorageService">
+            <summary>
+            Stores uploaded images in Azure Blob Storage. The connection string is read from configuration
+            ("AzureBlobStorage:ConnectionString") and must come from User Secrets or an environment variable,
+            never from a file in the repository. The client is created on first use, so the API still starts
+            (and the unit tests still run) when no storage account is configured.
+            The containers are private: the browser never receives the Azure URL, the API serves the image itself.
+            </summary>
+        </member>
+        <member name="M:RaceDay.API.Services.BlobStorageService.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Stores uploaded images in Azure Blob Storage. The connection string is read from configuration
+            ("AzureBlobStorage:ConnectionString") and must come from User Secrets or an environment variable,
+            never from a file in the repository. The client is created on first use, so the API still starts
+            (and the unit tests still run) when no storage account is configured.
+            The containers are private: the browser never receives the Azure URL, the API serves the image itself.
+            </summary>
+        </member>
+        <member name="T:RaceDay.API.Services.BlobContainers">
+            <summary>Container names used in Azure Blob Storage (must be lowercase).</summary>
+        </member>
+        <member name="M:RaceDay.API.Services.BlobNames.FromUrl(System.String)">
+            <summary>"https://account.blob.core.windows.net/event-banners/abc123.png" becomes "abc123.png".</summary>
+        </member>
+        <member name="T:RaceDay.API.Services.IBlobStorageService">
+            <summary>All file storage goes through this interface. Only the API talks to Azure; the MVC site never does.</summary>
+        </member>
+        <member name="M:RaceDay.API.Services.IBlobStorageService.UploadAsync(System.String,Microsoft.AspNetCore.Http.IFormFile,System.Threading.CancellationToken)">
+            <summary>Uploads the file and returns the blob's full URL (this is what is saved in the database).</summary>
+        </member>
+        <member name="M:RaceDay.API.Services.IBlobStorageService.DownloadAsync(System.String,System.String,System.Threading.CancellationToken)">
+            <summary>Returns the blob's bytes and content type, or null if it does not exist.</summary>
+        </member>
+        <member name="M:RaceDay.API.Services.BlobStorageExtensions.TryDeleteAsync(RaceDay.API.Services.IBlobStorageService,System.String,System.String)">
+            <summary>Deletes a blob but never throws: a failed clean-up must not fail the user's request.</summary>
+        </member>
+        <member name="T:RaceDay.API.Services.ImageRules">
+            <summary>Checks that an uploaded file really is a small image before it is sent to Blob Storage.</summary>
+        </member>
+        <member name="M:RaceDay.API.Services.ImageRules.ValidateAsync(Microsoft.AspNetCore.Http.IFormFile)">
+            <returns>An error message for the user, or null when the file is acceptable.</returns>
         </member>
         <member name="T:RaceDay.API.Services.JwtService">
             <summary>Creates signed JWTs carrying the user's ID, name, email and role.</summary>
@@ -196,6 +320,13 @@
         </member>
         <member name="T:RaceDay.API.Services.PasswordService">
             <summary>Hashes and verifies passwords with ASP.NET's salted PBKDF2 hasher. Plain text is never stored.</summary>
+        </member>
+        <member name="T:RaceDay.API.Services.TokenRevocationList">
+            <summary>
+            Remembers the IDs (jti) of tokens that have been logged out, so the API rejects them even though they
+            have not expired yet. Entries are dropped once the token would have expired anyway.
+            Held in memory: restarting the API forgets it, which is fine for this assignment.
+            </summary>
         </member>
         <member name="M:Microsoft.AspNetCore.OpenApi.Generated.DocumentationCommentIdHelper.CreateDocumentationId(System.Type)">
             <summary>

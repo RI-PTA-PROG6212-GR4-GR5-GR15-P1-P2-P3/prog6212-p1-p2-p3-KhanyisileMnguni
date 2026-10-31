@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi;
 using RaceDay.API.Data;
@@ -16,6 +15,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddSingleton<PasswordService>();
+builder.Services.AddSingleton<TokenRevocationList>();                  // remembers logged-out tokens
+builder.Services.AddSingleton<IBlobStorageService, BlobStorageService>(); // Azure Blob Storage (API only)
 builder.Services.AddControllers();
 
 // ---- JWT authentication ----
@@ -36,11 +37,17 @@ builder.Services
    options.MapInboundClaims = false;   // keep claim names exactly as issued
        options.Events = new JwtBearerEvents
        {
+           // After POST /api/auth/logout the same token must stop working.
+           OnTokenValidated = context =>
+           {
+               var revoked = context.HttpContext.RequestServices.GetRequiredService<TokenRevocationList>();
+               if (context.SecurityToken is Microsoft.IdentityModel.JsonWebTokens.JsonWebToken token && revoked.IsRevoked(token.Id))
+                   context.Fail("This token has been logged out.");
+               return Task.CompletedTask;
+           },
            OnAuthenticationFailed = context =>
            {
-               Console.WriteLine(
-                   $"JWT ERROR: {context.Exception.Message}");
-
+               Console.WriteLine($"JWT ERROR: {context.Exception.Message}");
                return Task.CompletedTask;
            }
        };
@@ -97,7 +104,8 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-app.UseHttpsRedirection();
+if (!app.Environment.IsDevelopment())
+    app.UseHttpsRedirection();   // skipped in Development so the Docker container can call the API over http
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();

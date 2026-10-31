@@ -1,6 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.JsonWebTokens;
 using RaceDay.API.Data;
 using RaceDay.API.Dtos;
 using RaceDay.API.Models;
@@ -9,7 +10,8 @@ using RaceDay.API.Services;
 namespace RaceDay.API.Controllers;
 
 [Route("api/auth")]
-public class AuthController(AppDbContext db, PasswordService passwords, JwtService jwt) : ApiControllerBase
+public class AuthController(AppDbContext db, PasswordService passwords, JwtService jwt, TokenRevocationList revocations)
+    : ApiControllerBase
 {
     /// <summary>Registers a new user as an Organiser or a Participant.</summary>
     /// <remarks>
@@ -97,5 +99,26 @@ public class AuthController(AppDbContext db, PasswordService passwords, JwtServi
 
         return Ok(new LoginResponse(id, role, name, token.Token, token.ExpiresAtUtc));
     }
-}
 
+    /// <summary>Logs the user out: the token used for this request stops working immediately.</summary>
+    /// <remarks>
+    /// The API remembers the token's unique ID, so any later request that uses the same token gets 401.
+    /// The client should also discard the token. Other tokens (for example a login on another device) are not affected.
+    /// </remarks>
+    /// <response code="204">Logged out.</response>
+    /// <response code="401">Not logged in, or the token was already logged out.</response>
+    [HttpPost("logout")]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public ActionResult Logout()
+    {
+        var header = Request.Headers.Authorization.ToString();
+        const string prefix = "Bearer ";
+        if (header.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+        {
+            var token = new JsonWebTokenHandler().ReadJsonWebToken(header[prefix.Length..].Trim());
+            revocations.Revoke(token.Id, token.ValidTo);
+        }
+        return NoContent();
+    }
+}

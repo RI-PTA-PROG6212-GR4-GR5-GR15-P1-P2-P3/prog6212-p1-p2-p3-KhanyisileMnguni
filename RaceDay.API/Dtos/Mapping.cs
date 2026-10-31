@@ -1,4 +1,4 @@
-﻿using RaceDay.API.Models;
+using RaceDay.API.Models;
 
 namespace RaceDay.API.Dtos;
 
@@ -7,7 +7,7 @@ public static class Mapping
 {
     public static IQueryable<EventResponse> ToResponse(this IQueryable<Event> q) =>
         q.Select(e => new EventResponse(e.EventID, e.EventName, e.EventType, e.EventDate, e.Location,
-            e.Description, e.Organiser.Name, e.Organiser.OrganisationName));
+            e.Description, e.Organiser.Name, e.Organiser.OrganisationName, e.BannerUrl != null));
 
     public static IQueryable<CategoryResponse> ToResponse(this IQueryable<Category> q) =>
         q.Select(c => new CategoryResponse(c.CategoryID, c.EventID, c.CategoryName, c.DistanceKM,

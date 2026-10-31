@@ -115,6 +115,23 @@
         }
       }
     },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "summary": "Logs the user out: the token used for this request stops working immediately.",
+        "description": "The API remembers the token's unique ID, so any later request that uses the same token gets 401.\r\nThe client should also discard the token. Other tokens (for example a login on another device) are not affected.",
+        "responses": {
+          "204": {
+            "description": "Logged out."
+          },
+          "401": {
+            "description": "Not logged in, or the token was already logged out."
+          }
+        }
+      }
+    },
     "/api/categories/{id}": {
       "put": {
         "tags": [
@@ -434,7 +451,75 @@
             "description": "Enrolment not found."
           },
           "409": {
-            "description": "A result already exists for this enrolment."
+            "description": "A result already exists for this enrolment (use PUT to correct it)."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Enrolments"
+        ],
+        "summary": "Corrects an existing result. Owning Organiser only.",
+        "description": "Same body as capturing a result. Use this when a time or position was entered wrongly.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultRequest"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultRequest"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResultRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The updated result.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResultResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid fields."
+          },
+          "403": {
+            "description": "The enrolment is not in one of your events."
+          },
+          "404": {
+            "description": "Enrolment not found, or no result captured yet."
           }
         }
       },
@@ -529,7 +614,8 @@
         "tags": [
           "Events"
         ],
-        "summary": "Lists upcoming events (public). Add ?includePast=true to include events that have already happened.",
+        "summary": "Lists upcoming events (public), with optional filters.",
+        "description": "All filters are optional and can be combined: eventType (Run / Walk / Cycle), search (matches the name or description),\r\nlocation (matches part of the location), fromDate and toDate (yyyy-MM-dd). Add includePast=true to include events that have already happened.",
         "parameters": [
           {
             "name": "includePast",
@@ -537,6 +623,43 @@
             "schema": {
               "type": "boolean",
               "default": false
+            }
+          },
+          {
+            "name": "eventType",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "location",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "fromDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          {
+            "name": "toDate",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "date"
             }
           }
         ],
@@ -569,6 +692,48 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/events/mine": {
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Dashboard data: every event the logged-in Organiser created, with category and enrolment totals.",
+        "responses": {
+          "200": {
+            "description": "Array of the Organiser's own events (past and upcoming), soonest first.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganiserEventSummaryResponse"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganiserEventSummaryResponse"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OrganiserEventSummaryResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Logged in as a Participant."
           }
         }
       }
@@ -667,7 +832,7 @@
         "tags": [
           "Events"
         ],
-        "summary": "Deletes an event and its categories. Only the owning Organiser may do this.",
+        "summary": "Deletes an event and its categories (and its banner image). Only the owning Organiser may do this.",
         "parameters": [
           {
             "name": "id",
@@ -694,6 +859,128 @@
           },
           "409": {
             "description": "Participants are already enrolled, so the event cannot be deleted."
+          }
+        }
+      }
+    },
+    "/api/events/{id}/banner": {
+      "post": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Uploads (or replaces) the banner image of an event. Owning Organiser only. Stored in Azure Blob Storage.",
+        "description": "Send a multipart form with one file field named \"file\". JPG, PNG, GIF or WEBP, up to 5 MB.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved. Url is the route that serves the banner.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploadResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploadResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a valid image, wrong type, or too large."
+          },
+          "403": {
+            "description": "Not the owning Organiser."
+          },
+          "404": {
+            "description": "Event not found."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Events"
+        ],
+        "summary": "Returns the banner image of an event (the image itself, public).",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The image.",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/gif": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The event does not exist or has no banner."
           }
         }
       }
@@ -807,7 +1094,7 @@
         "tags": [
           "Events"
         ],
-        "summary": "Lists everyone enrolled in an event. Owning Organiser only.",
+        "summary": "Lists everyone enrolled in an event, with any result already captured. Owning Organiser only.",
         "parameters": [
           {
             "name": "id",
@@ -821,7 +1108,7 @@
         ],
         "responses": {
           "200": {
-            "description": "Array of enrolments with participant and category details.",
+            "description": "Array of enrolments with participant, category and result details.",
             "content": {
               "text/plain": {
                 "schema": {
@@ -864,6 +1151,7 @@
           "Participants"
         ],
         "summary": "Returns the logged-in Participant's full performance history across all past events.",
+        "description": "Each item includes the finishing position and totalFinishers (everyone who finished in that category), e.g. \"47th of 312\".",
         "responses": {
           "200": {
             "description": "Array of results with event and category context, newest first.",
@@ -983,6 +1271,103 @@
           },
           "409": {
             "description": "Email belongs to another user."
+          }
+        }
+      }
+    },
+    "/api/profile/picture": {
+      "post": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Uploads (or replaces) the logged-in Participant's profile picture. Stored in Azure Blob Storage.",
+        "description": "Send a multipart form with one file field named \"file\". JPG, PNG, GIF or WEBP, up to 5 MB.",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              },
+              "encoding": {
+                "file": {
+                  "style": "form"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Saved. Url is the route that serves the picture.",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploadResponse"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploadResponse"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ImageUploadResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not a valid image, wrong type, or too large."
+          },
+          "403": {
+            "description": "Logged in as an Organiser."
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Profile"
+        ],
+        "summary": "Returns the logged-in Participant's profile picture (the image itself).",
+        "responses": {
+          "200": {
+            "description": "The image.",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/jpeg": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/gif": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              },
+              "image/webp": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No picture uploaded yet."
           }
         }
       }
@@ -1177,6 +1562,9 @@
               "$ref": "#/components/schemas/CategoryResponse"
             },
             "nullable": true
+          },
+          "hasBanner": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1253,6 +1641,9 @@
           "organisationName": {
             "type": "string",
             "nullable": true
+          },
+          "hasBanner": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false
@@ -1305,9 +1696,31 @@
           "status": {
             "type": "string",
             "nullable": true
+          },
+          "categoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalFinishers": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false
+      },
+      "ImageUploadResponse": {
+        "type": "object",
+        "properties": {
+          "hasImage": {
+            "type": "boolean"
+          },
+          "url": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false,
+        "description": "Returned after an image upload. Url is an API route that serves the image."
       },
       "LoginRequest": {
         "required": [
@@ -1392,9 +1805,64 @@
           "status": {
             "type": "string",
             "nullable": true
+          },
+          "hasResult": {
+            "type": "boolean"
+          },
+          "finishTime": {
+            "type": "string",
+            "format": "date-span",
+            "nullable": true
+          },
+          "position": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "resultStatus": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false
+      },
+      "OrganiserEventSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "eventId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "eventName": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventType": {
+            "type": "string",
+            "nullable": true
+          },
+          "eventDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "location": {
+            "type": "string",
+            "nullable": true
+          },
+          "categoryCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "enrolmentCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasBanner": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "description": "One row of the Organiser dashboard."
       },
       "ProfileResponse": {
         "type": "object",
@@ -1427,6 +1895,9 @@
           "emergencyContact": {
             "type": "string",
             "nullable": true
+          },
+          "hasProfilePicture": {
+            "type": "boolean"
           }
         },
         "additionalProperties": false

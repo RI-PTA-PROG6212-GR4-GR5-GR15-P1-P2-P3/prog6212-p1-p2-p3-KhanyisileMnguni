@@ -1,0 +1,18 @@
+# Build output
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Secrets and local settings (the Azure connection string lives in User Secrets, not in the repo)
+*.env
+.env
+
+# OS
+Thumbs.db
+.DS_Store

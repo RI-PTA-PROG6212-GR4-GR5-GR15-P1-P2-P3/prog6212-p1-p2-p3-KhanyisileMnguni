@@ -35,6 +35,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.HasIndex(x => x.Email).IsUnique();
             e.Property(x => x.Password).HasMaxLength(200).IsRequired();
             e.Property(x => x.EmergencyContact).HasMaxLength(100);
+            e.Property(x => x.ProfilePictureUrl).HasMaxLength(200);
         });
 
         b.Entity<Event>(e =>
@@ -45,6 +46,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             e.Property(x => x.EventType).HasMaxLength(20).IsRequired();
             e.Property(x => x.Location).HasMaxLength(150).IsRequired();
             e.Property(x => x.Description).HasMaxLength(1000);
+            e.Property(x => x.BannerUrl).HasMaxLength(200);
             e.HasOne(x => x.Organiser).WithMany(o => o.Events).HasForeignKey(x => x.OrganiserID);
         });
 
