@@ -1,0 +1,84 @@
+name: RaceDay CI
+
+# Runs on every push and pull request:
+#   1. validate-structure: checks the repository has the files and folders the assignment requires
+#   2. build-and-test:     builds the solution and runs all unit tests (a green run = a green build)
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOPT_OUT: true
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          missing=0
+
+          check_file() {
+            if [ -f "$1" ]; then echo "OK      $1"; else echo "::error::Missing file: $1"; missing=1; fi
+          }
+          check_dir() {
+            if [ -d "$1" ]; then echo "OK      $1/"; else echo "::error::Missing folder: $1"; missing=1; fi
+          }
+          check_pattern() {   # $1 = folder, $2 = file name pattern, $3 = description
+            if [ -n "$(find "$1" -iname "$2" 2>/dev/null | head -n 1)" ]; then
+              echo "OK      $3"
+            else
+              echo "::error::Missing $3 in $1"; missing=1
+            fi
+          }
+
+          echo "== Top level =="
+          check_file "README.md"
+
+          echo "== Part 1: planning documents =="
+          check_dir "Part 1/docs"
+          check_pattern "Part 1/docs" "*erd*"      "ERD"
+          check_pattern "Part 1/docs" "*endpoint*" "API endpoint plan"
+          check_pattern "Part 1/docs" "*.sql"      "SQL script"
+
+          echo "== Part 2: API and tests =="
+          check_file "RaceDay.API/RaceDay.API.csproj"
+          check_file "RaceDay.API/Program.cs"
+          check_dir  "RaceDay.API/Controllers"
+          check_dir  "RaceDay.API/Models"
+          check_dir  "RaceDay.API/Services"
+          check_dir  "RaceDay.API/Migrations"
+          check_file "RaceDay.API.Tests/RaceDay.API.Tests.csproj"
+
+          if [ "$missing" -ne 0 ]; then
+            echo "Repository structure validation FAILED."
+            exit 1
+          fi
+          echo "Repository structure validation passed."
+
+  build-and-test:
+    needs: validate-structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # The test project references the API project, so restoring and building it builds both.
+      - name: Restore
+        run: dotnet restore RaceDay.API.Tests/RaceDay.API.Tests.csproj
+
+      - name: Build
+        run: dotnet build RaceDay.API.Tests/RaceDay.API.Tests.csproj --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test RaceDay.API.Tests/RaceDay.API.Tests.csproj --no-build --configuration Release --verbosity normal
