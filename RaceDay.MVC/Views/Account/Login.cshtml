@@ -1,21 +1,33 @@
-﻿@model RaceDay.MVC.Models.LoginViewModel
-
-<h2>Login to RaceDay</h2>
-
-<form asp-action="Login" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <div class="mb-3">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Log in";
+}
+<div class="row justify-content-center">
+    <div class="col-md-7 col-lg-5">
+        <div class="card auth-card">
+            <div class="auth-head"><i class="bi bi-person-lock"></i><h1>Welcome back</h1><p>Log in to enter events and track your results.</p></div>
+            <div class="card-body p-4">
+                @if (!string.IsNullOrEmpty(Model.ReturnUrl))
+                {
+                    <div class="alert alert-info py-2 small">Please log in to continue.</div>
+                }
+                <form asp-action="Login" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email address</label>
+                        <input asp-for="Email" class="form-control" autocomplete="email" placeholder="you@@example.com" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label">Password</label>
+                        <input asp-for="Password" class="form-control" autocomplete="current-password" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+                    <button type="submit" class="btn btn-rd w-100 btn-lg">Log in</button>
+                </form>
+                <p class="text-center text-muted small mt-3 mb-0">New to RaceDay? <a asp-action="Register">Create an account</a></p>
+            </div>
+        </div>
     </div>
-
-    <div class="mb-3">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Login</button>
-</form>
-
-<p>Don't have an account? <a asp-action="Register">Register</a></p>
+</div>

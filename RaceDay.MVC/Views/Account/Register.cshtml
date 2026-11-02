@@ -1,50 +1,92 @@
-﻿@model RaceDay.MVC.Models.RegisterViewModel
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Create your account";
+}
+<div class="row justify-content-center">
+    <div class="col-md-9 col-lg-6">
+        <div class="card auth-card">
+            <div class="auth-head"><i class="bi bi-flag"></i><h1>Join RaceDay</h1><p>Enter races, or organise your own.</p></div>
+            <div class="card-body p-4">
+                <form asp-action="Register" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
 
-<h2>Create a RaceDay Account</h2>
+                    <div class="mb-3">
+                        <label class="form-label d-block">I want to</label>
+                        <div class="btn-group w-100" role="group" aria-label="Choose your role">
+                            <input type="radio" class="btn-check" name="Role" id="roleParticipant" value="Participant" autocomplete="off" checked="@(Model.Role != "Organiser")" />
+                            <label class="btn btn-outline-rd" for="roleParticipant"><i class="bi bi-person-running"></i> Enter events (Participant)</label>
+                            <input type="radio" class="btn-check" name="Role" id="roleOrganiser" value="Organiser" autocomplete="off" checked="@(Model.Role == "Organiser")" />
+                            <label class="btn btn-outline-rd" for="roleOrganiser"><i class="bi bi-clipboard-check"></i> Run events (Organiser)</label>
+                        </div>
+                        <span asp-validation-for="Role" class="text-danger small"></span>
+                    </div>
 
-<form asp-action="Register" method="post">
-    <div asp-validation-summary="All" class="text-danger"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Full name</label>
+                        <input asp-for="Name" class="form-control" autocomplete="name" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email address</label>
+                        <input asp-for="Email" class="form-control" autocomplete="email" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Password" class="form-label">Password</label>
+                            <input asp-for="Password" class="form-control" autocomplete="new-password" />
+                            <div class="form-text">At least 8 characters.</div>
+                            <span asp-validation-for="Password" class="text-danger small"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label">Repeat password</label>
+                            <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
 
-    <div class="mb-3">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
+                    <div id="organiserFields" class="@(Model.Role == "Organiser" ? "" : "d-none")">
+                        <div class="mb-3">
+                            <label asp-for="OrganisationName" class="form-label">Organisation name <span class="text-muted">(optional)</span></label>
+                            <input asp-for="OrganisationName" class="form-control" />
+                            <span asp-validation-for="OrganisationName" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                    <div id="participantFields" class="@(Model.Role == "Organiser" ? "d-none" : "")">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="DateOfBirth" class="form-label">Date of birth</label>
+                                <input asp-for="DateOfBirth" type="date" class="form-control" />
+                                <span asp-validation-for="DateOfBirth" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="EmergencyContact" class="form-label">Emergency contact <span class="text-muted">(optional)</span></label>
+                                <input asp-for="EmergencyContact" class="form-control" placeholder="Name and number" />
+                                <span asp-validation-for="EmergencyContact" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-rd w-100 btn-lg">Create account</button>
+                </form>
+                <p class="text-center text-muted small mt-3 mb-0">Already registered? <a asp-action="Login">Log in</a></p>
+            </div>
+        </div>
     </div>
+</div>
 
-    <div class="mb-3">
-        <label asp-for="Email"></label>
-        <input asp-for="Email" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Password"></label>
-        <input asp-for="Password" type="password" class="form-control" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="Role">Account Type</label>
-        <select asp-for="Role" class="form-select">
-            <option value="">Select role</option>
-            <option value="Organiser">Organiser</option>
-            <option value="Participant">Participant</option>
-        </select>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="OrganisationName">Organisation Name</label>
-        <input asp-for="OrganisationName" class="form-control"
-               placeholder="Organiser only" />
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="DateOfBirth">Date of Birth</label>
-        <input asp-for="DateOfBirth" type="date" class="form-control" />
-        <small>Required for Participants.</small>
-    </div>
-
-    <div class="mb-3">
-        <label asp-for="EmergencyContact">Emergency Contact</label>
-        <input asp-for="EmergencyContact" class="form-control" />
-    </div>
-
-    <button type="submit" class="btn btn-success">Register</button>
-</form>
+@section Scripts {
+    <script>
+        // Show the fields that belong to the chosen role.
+        const organiserFields = document.getElementById('organiserFields');
+        const participantFields = document.getElementById('participantFields');
+        document.querySelectorAll('input[name="Role"]').forEach(function (radio) {
+            radio.addEventListener('change', function () {
+                const organiser = document.getElementById('roleOrganiser').checked;
+                organiserFields.classList.toggle('d-none', !organiser);
+                participantFields.classList.toggle('d-none', organiser);
+            });
+        });
+    </script>
+}

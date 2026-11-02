@@ -1,0 +1,10 @@
+@model ErrorViewModel
+@{
+    ViewData["Title"] = Model.Title;
+}
+<section class="text-center py-5">
+    <i class="bi bi-flag-fill display-3 text-rd-orange"></i>
+    <h1 class="display-6 mt-3">@Model.Title</h1>
+    <p class="lead text-muted">@Model.Message</p>
+    <a asp-controller="Home" asp-action="Index" class="btn btn-rd mt-2"><i class="bi bi-house"></i> Back to events</a>
+</section>

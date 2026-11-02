@@ -1,19 +1,89 @@
-﻿@{
-    ViewData["Title"] = "Home";
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Upcoming events";
+    var role = Context.Session.UserRole();
+    string Selected(string? current, string value) => string.Equals(current, value, StringComparison.OrdinalIgnoreCase) ? "selected" : "";
 }
 
-<div class="text-center mt-5">
-    <h1 class="display-3 fw-bold">Welcome to RaceDay</h1>
-
-    <p class="lead mt-3">
-        Discover, organise and participate in sporting events.
-    </p>
-
-    <div class="mt-4">
-        <a asp-controller="Account" asp-action="Login"
-           class="btn btn-primary btn-lg me-2">Login</a>
-
-        <a asp-controller="Account" asp-action="Register"
-           class="btn btn-success btn-lg">Register</a>
+<section class="hero mb-4">
+    <div class="hero-content">
+        <p class="hero-kicker">Run &middot; Walk &middot; Ride</p>
+        <h1>Your next race<br />starts here.</h1>
+        <p class="hero-sub">Find road runs, charity walks and cycling challenges across South Africa, and enter in a few taps.</p>
+        @if (!Context.Session.IsLoggedIn())
+        {
+            <a asp-controller="Account" asp-action="Register" class="btn btn-rd btn-lg me-2">Join RaceDay</a>
+            <a asp-controller="Account" asp-action="Login" class="btn btn-outline-light btn-lg">Log in</a>
+        }
+        else if (role == "Participant")
+        {
+            <a asp-controller="Participant" asp-action="MyEvents" class="btn btn-rd btn-lg me-2"><i class="bi bi-ticket-perforated"></i> My events</a>
+            <a asp-controller="Participant" asp-action="MyResults" class="btn btn-outline-light btn-lg"><i class="bi bi-trophy"></i> My results</a>
+        }
+        else if (role == "Organiser")
+        {
+            <a asp-controller="Organiser" asp-action="Dashboard" class="btn btn-rd btn-lg"><i class="bi bi-speedometer2"></i> Go to my dashboard</a>
+        }
     </div>
-</div>
+</section>
+
+<form method="get" asp-controller="Home" asp-action="Index" class="filter-bar card mb-4">
+    <div class="card-body">
+        <div class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label for="Search" class="form-label">Search</label>
+                <input id="Search" name="Search" value="@Model.Filter.Search" class="form-control" placeholder="Event name or keyword" />
+            </div>
+            <div class="col-md-2 col-6">
+                <label for="EventType" class="form-label">Type</label>
+                <select id="EventType" name="EventType" class="form-select">
+                    <option value="">All types</option>
+                    <option value="Run" selected="@(Selected(Model.Filter.EventType, "Run") == "selected")">Run</option>
+                    <option value="Walk" selected="@(Selected(Model.Filter.EventType, "Walk") == "selected")">Walk</option>
+                    <option value="Cycle" selected="@(Selected(Model.Filter.EventType, "Cycle") == "selected")">Cycle</option>
+                </select>
+            </div>
+            <div class="col-md-3 col-6">
+                <label for="Location" class="form-label">Location</label>
+                <input id="Location" name="Location" value="@Model.Filter.Location" class="form-control" placeholder="City or area" />
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Date range</label>
+                <div class="input-group">
+                    <input type="date" name="FromDate" value="@Model.Filter.FromDate?.ToString("yyyy-MM-dd")" class="form-control" aria-label="From date" />
+                    <input type="date" name="ToDate" value="@Model.Filter.ToDate?.ToString("yyyy-MM-dd")" class="form-control" aria-label="To date" />
+                </div>
+            </div>
+        </div>
+        <div class="mt-3 d-flex gap-2">
+            <button type="submit" class="btn btn-rd"><i class="bi bi-funnel"></i> Filter</button>
+            @if (Model.Filter.IsActive)
+            {
+                <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">Clear filters</a>
+            }
+        </div>
+    </div>
+</form>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning"><i class="bi bi-wifi-off me-2"></i>@Model.Error</div>
+}
+else if (Model.Events.Count == 0)
+{
+    <div class="empty-state">
+        <i class="bi bi-calendar-x"></i>
+        <h2>@(Model.Filter.IsActive ? "No events match your filters" : "No upcoming events yet")</h2>
+        <p>@(Model.Filter.IsActive ? "Try a different search or clear the filters." : "Check back soon, new events are added all the time.")</p>
+    </div>
+}
+else
+{
+    <h2 class="section-title">@Model.Events.Count upcoming @(Model.Events.Count == 1 ? "event" : "events")</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var item in Model.Events)
+        {
+            <partial name="_EventCard" model="item" />
+        }
+    </div>
+}

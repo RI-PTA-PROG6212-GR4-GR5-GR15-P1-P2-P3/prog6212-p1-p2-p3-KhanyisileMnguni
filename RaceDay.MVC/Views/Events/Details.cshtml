@@ -1,0 +1,109 @@
+@model EventDetailsViewModel
+@{
+    var e = Model.Event;
+    ViewData["Title"] = e.EventName;
+    var role = Context.Session.UserRole();
+    var loggedIn = Context.Session.IsLoggedIn();
+    var isPast = e.EventDate < DateOnly.FromDateTime(DateTime.Today);
+    var banner = e.HasBanner
+        ? Url.Action("EventBanner", "Media", new { id = e.EventId })
+        : Url.Content("~/images/event-placeholder.svg");
+}
+
+<a asp-controller="Home" asp-action="Index" class="back-link"><i class="bi bi-arrow-left"></i> All events</a>
+
+<section class="event-hero mt-2 mb-4" style="background-image:url('@banner')">
+    <div class="event-hero-overlay">
+        <span class="type-pill"><i class="bi @UiHelpers.TypeIcon(e.EventType)"></i> @e.EventType</span>
+        <h1>@e.EventName</h1>
+        <ul class="list-inline event-hero-meta">
+            <li class="list-inline-item"><i class="bi bi-calendar3"></i> @UiHelpers.Date(e.EventDate)</li>
+            <li class="list-inline-item"><i class="bi bi-geo-alt-fill"></i> @e.Location</li>
+            <li class="list-inline-item"><i class="bi bi-building"></i> @(string.IsNullOrWhiteSpace(e.OrganisationName) ? e.OrganiserName : e.OrganisationName)</li>
+        </ul>
+    </div>
+</section>
+
+<div class="row g-4">
+    <div class="col-lg-4 order-lg-2">
+        <div class="card info-card">
+            <div class="card-body">
+                <h2 class="h5">About this event</h2>
+                <p class="mb-0">@(string.IsNullOrWhiteSpace(e.Description) ? "The organiser hasn't added a description yet." : e.Description)</p>
+                @if (isPast)
+                {
+                    <div class="alert alert-secondary mt-3 mb-0 py-2 small"><i class="bi bi-clock-history"></i> This event has already taken place.</div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-8 order-lg-1">
+        <h2 class="section-title">Choose your category</h2>
+        @if (e.Categories.Count == 0)
+        {
+            <div class="empty-state small-empty"><i class="bi bi-list-check"></i><p>The organiser hasn't added any categories yet.</p></div>
+        }
+        else
+        {
+            <div class="vstack gap-3">
+                @foreach (var c in e.Categories)
+                {
+                    var spotsLeft = Math.Max(0, c.MaxParticipants - c.EnrolledCount);
+                    var percent = c.MaxParticipants == 0 ? 100 : (int)Math.Min(100, Math.Round(100.0 * c.EnrolledCount / c.MaxParticipants));
+                    var isFull = spotsLeft == 0;
+                    var entered = Model.EnrolledCategoryIds.Contains(c.CategoryId);
+                    <div class="card category-card">
+                        <div class="card-body">
+                            <div class="row align-items-center g-3">
+                                <div class="col-md-5">
+                                    <h3 class="h5 mb-1">@c.CategoryName</h3>
+                                    <div class="text-muted small"><i class="bi bi-signpost-split"></i> @c.DistanceKm.ToString("0.##") km &nbsp;&middot;&nbsp; <i class="bi bi-cash-coin"></i> @UiHelpers.Money(c.EntryFee)</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="d-flex justify-content-between small text-muted mb-1">
+                                        <span>@c.EnrolledCount entered</span>
+                                        <span>@(isFull ? "Full" : $"{spotsLeft} spots left")</span>
+                                    </div>
+                                    <div class="progress rd-progress" role="progressbar" aria-label="Places taken" aria-valuenow="@percent" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar @(isFull ? "bg-danger" : "")" style="width:@percent%"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 text-md-end">
+                                    @if (entered)
+                                    {
+                                        <span class="status-badge status-confirmed"><i class="bi bi-check-lg"></i> You're entered</span>
+                                    }
+                                    else if (isPast)
+                                    {
+                                        <span class="text-muted small">Closed</span>
+                                    }
+                                    else if (isFull)
+                                    {
+                                        <span class="status-badge status-problem">Full</span>
+                                    }
+                                    else if (role == "Participant")
+                                    {
+                                        <form asp-controller="Events" asp-action="Enter" method="post">
+                                            <input type="hidden" name="eventId" value="@e.EventId" />
+                                            <input type="hidden" name="categoryId" value="@c.CategoryId" />
+                                            <button type="submit" class="btn btn-rd"><i class="bi bi-flag-fill"></i> Enter event</button>
+                                        </form>
+                                    }
+                                    else if (!loggedIn)
+                                    {
+                                        <a asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path" class="btn btn-outline-rd btn-sm">Log in to enter</a>
+                                    }
+                                    else
+                                    {
+                                        <span class="text-muted small">Participants only</span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</div>
