@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="RaceDay logo">
+  <rect width="64" height="64" rx="14" fill="#0B1F3A"/>
+  <path d="M14 46 L30 14 H38 L26 38 H40 L34 50 Z" fill="#FF5A1F"/>
+  <path d="M30 14 H42 L54 14 L40 42 H28 Z" fill="none"/>
+  <rect x="38" y="40" width="14" height="6" rx="3" fill="#C6F432" transform="rotate(-24 45 43)"/>
+  <rect x="14" y="52" width="36" height="3" rx="1.5" fill="#C6F432" opacity=".85"/>
+</svg>

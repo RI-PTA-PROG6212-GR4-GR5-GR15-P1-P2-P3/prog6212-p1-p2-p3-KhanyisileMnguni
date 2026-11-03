@@ -1,5 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model OrganiserEventsViewModel
 @{
+    ViewData["Title"] = "My events";
+    var today = DateOnly.FromDateTime(DateTime.Today);
+}
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="page-title mb-0"><i class="bi bi-calendar-event"></i> My events</h1>
+    <a asp-action="Create" class="btn btn-rd"><i class="bi bi-plus-circle"></i> Create event</a>
+</div>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning">@Model.Error</div>
+}
+
+@if (Model.Events.Count == 0 && Model.Error is null)
+{
+    <div class="empty-state">
+        <i class="bi bi-calendar-plus"></i>
+        <h2>You haven't created any events</h2>
+        <p>Create an event, add categories, then share it with runners.</p>
+        <a asp-action="Create" class="btn btn-rd">Create an event</a>
+    </div>
+}
+else if (Model.Events.Count > 0)
+{
+    <div class="table-responsive rd-table-wrap">
+        <table class="table rd-table align-middle mb-0">
+            <thead><tr><th>Event</th><th>Date</th><th>Location</th><th class="text-center">Categories</th><th class="text-center">Enrolments</th><th class="text-end">Manage</th></tr></thead>
+            <tbody>
+            @foreach (var e in Model.Events)
+            {
+                <tr>
+                    <td>
+                        <a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId" class="fw-semibold">@e.EventName</a>
+                        <div class="small text-muted"><i class="bi @UiHelpers.TypeIcon(e.EventType)"></i> @e.EventType @(e.EventDate < today ? " - finished" : "")</div>
+                    </td>
+                    <td>@UiHelpers.Date(e.EventDate)</td>
+                    <td>@e.Location</td>
+                    <td class="text-center">@e.CategoryCount</td>
+                    <td class="text-center">@e.EnrolmentCount</td>
+                    <td class="text-end text-nowrap">
+                        <a asp-action="Edit" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-secondary" title="Edit event"><i class="bi bi-pencil"></i></a>
+                        <a asp-action="Categories" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-secondary" title="Categories"><i class="bi bi-list-check"></i></a>
+                        <a asp-action="Enrolments" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-secondary" title="Enrolments"><i class="bi bi-people"></i></a>
+                        <a asp-action="Results" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-rd" title="Enter results"><i class="bi bi-stopwatch"></i></a>
+                        <form asp-action="Delete" asp-route-id="@e.EventId" method="post" class="d-inline" data-confirm="Delete @e.EventName? This cannot be undone." onsubmit="return confirm(this.dataset.confirm);">
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete event"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 }

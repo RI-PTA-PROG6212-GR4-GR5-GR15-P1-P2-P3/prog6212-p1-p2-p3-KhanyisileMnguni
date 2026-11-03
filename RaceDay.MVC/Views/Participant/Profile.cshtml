@@ -1,0 +1,57 @@
+@model ProfileViewModel
+@{
+    ViewData["Title"] = "My profile";
+    var picture = Model.HasProfilePicture
+        ? Url.Action("ProfilePicture", "Media") + "?v=" + DateTime.UtcNow.Ticks
+        : Url.Content("~/images/avatar-placeholder.svg");
+}
+<h1 class="page-title"><i class="bi bi-person-circle"></i> My profile</h1>
+
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card text-center profile-card">
+            <div class="card-body">
+                <img src="@picture" alt="Your profile picture" class="avatar-lg mb-3" />
+                <h2 class="h5 mb-1">@Model.Name</h2>
+                <p class="text-muted small">@Model.Email</p>
+
+                <form asp-action="UploadPicture" method="post" enctype="multipart/form-data">
+                    <label for="file" class="form-label small text-muted">Upload a new picture (JPG, PNG, GIF or WEBP, up to 5 MB)</label>
+                    <input type="file" id="file" name="file" class="form-control form-control-sm mb-2" accept="image/png,image/jpeg,image/gif,image/webp" required />
+                    <button type="submit" class="btn btn-rd btn-sm w-100"><i class="bi bi-cloud-arrow-up"></i> Upload picture</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-body p-4">
+                <h2 class="h5 mb-3">Personal information</h2>
+                <form asp-action="Profile" method="post" novalidate>
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger py-2"></div>
+                    <div class="mb-3">
+                        <label asp-for="Name" class="form-label">Full name</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label">Email address</label>
+                        <input asp-for="Email" class="form-control" />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-3">
+                        <label asp-for="EmergencyContact" class="form-label">Emergency contact</label>
+                        <input asp-for="EmergencyContact" class="form-control" placeholder="Name and number" />
+                        <span asp-validation-for="EmergencyContact" class="text-danger small"></span>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Date of birth</label>
+                        <input class="form-control" value="@(Model.DateOfBirth is { } dob ? UiHelpers.Date(dob) : "-")" disabled />
+                    </div>
+                    <button type="submit" class="btn btn-rd"><i class="bi bi-save"></i> Save changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

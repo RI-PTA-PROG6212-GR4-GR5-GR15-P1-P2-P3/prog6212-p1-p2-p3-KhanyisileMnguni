@@ -1,0 +1,74 @@
+@model MyEventsViewModel
+@{
+    ViewData["Title"] = "My events";
+}
+<h1 class="page-title"><i class="bi bi-ticket-perforated"></i> My events</h1>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning">@Model.Error</div>
+}
+
+@if (Model.Upcoming.Count == 0 && Model.Past.Count == 0 && Model.Error is null)
+{
+    <div class="empty-state">
+        <i class="bi bi-ticket-detailed"></i>
+        <h2>You haven't entered any events yet</h2>
+        <p>Find your next race and press "Enter event".</p>
+        <a asp-controller="Home" asp-action="Index" class="btn btn-rd">Browse events</a>
+    </div>
+}
+else
+{
+    <h2 class="section-title">Coming up</h2>
+    @if (Model.Upcoming.Count == 0)
+    {
+        <p class="text-muted">Nothing coming up. <a asp-controller="Home" asp-action="Index">Find an event</a>.</p>
+    }
+    else
+    {
+        <div class="table-responsive rd-table-wrap mb-4">
+            <table class="table rd-table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Fee</th><th>Status</th><th></th></tr></thead>
+                <tbody>
+                @foreach (var n in Model.Upcoming)
+                {
+                    <tr>
+                        <td><a asp-controller="Events" asp-action="Details" asp-route-id="@n.EventId" class="fw-semibold">@n.EventName</a><div class="small text-muted"><i class="bi bi-geo-alt"></i> @n.Location</div></td>
+                        <td>@UiHelpers.Date(n.EventDate)</td>
+                        <td>@n.CategoryName <span class="text-muted small">(@n.DistanceKm.ToString("0.##") km)</span></td>
+                        <td>@UiHelpers.Money(n.EntryFee)</td>
+                        <td><partial name="_StatusBadge" model="n.Status" /></td>
+                        <td class="text-end">
+                            <form asp-action="Cancel" asp-route-id="@n.EnrolmentId" method="post" data-confirm="Cancel your entry for @n.EventName?" onsubmit="return confirm(this.dataset.confirm);">
+                                <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-x-circle"></i> Cancel</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+
+    @if (Model.Past.Count > 0)
+    {
+        <h2 class="section-title">Past events</h2>
+        <div class="table-responsive rd-table-wrap">
+            <table class="table rd-table align-middle mb-0">
+                <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Status</th></tr></thead>
+                <tbody>
+                @foreach (var n in Model.Past)
+                {
+                    <tr>
+                        <td><a asp-controller="Events" asp-action="Details" asp-route-id="@n.EventId" class="fw-semibold">@n.EventName</a></td>
+                        <td>@UiHelpers.Date(n.EventDate)</td>
+                        <td>@n.CategoryName</td>
+                        <td><partial name="_StatusBadge" model="n.Status" /></td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    }
+}

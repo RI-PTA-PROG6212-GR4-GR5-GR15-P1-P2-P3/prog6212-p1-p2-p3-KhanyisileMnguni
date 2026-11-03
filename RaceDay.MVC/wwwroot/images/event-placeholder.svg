@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1F3A"/>
+      <stop offset="1" stop-color="#1c4f8f"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="450" fill="url(#g)"/>
+  <g fill="none" stroke-linecap="round">
+    <path d="M-40 360 C 220 260, 480 280, 860 120" stroke="#FF5A1F" stroke-width="16"/>
+    <path d="M-40 395 C 230 295, 490 315, 860 155" stroke="#C6F432" stroke-width="8"/>
+    <path d="M-40 420 C 240 325, 500 345, 860 190" stroke="#ffffff" stroke-width="3" opacity=".35"/>
+  </g>
+  <!-- simple runner -->
+  <g fill="#ffffff" opacity=".92">
+    <circle cx="470" cy="150" r="22"/>
+    <path d="M455 185 L505 195 L535 238 L512 248 L488 215 L470 262 L505 300 L492 345 L462 345 L470 312 L430 285 L418 330 L388 322 L402 262 L420 205 Z"/>
+  </g>
+  <text x="40" y="70" font-family="Arial Black, Arial, sans-serif" font-size="34" fill="#C6F432" letter-spacing="3">RACEDAY</text>
+</svg>

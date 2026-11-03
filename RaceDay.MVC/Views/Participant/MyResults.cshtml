@@ -1,0 +1,63 @@
+@model MyResultsViewModel
+@{
+    ViewData["Title"] = "My results";
+}
+<h1 class="page-title"><i class="bi bi-trophy"></i> My results</h1>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning">@Model.Error</div>
+}
+
+@if (Model.Results.Count == 0 && Model.Error is null)
+{
+    <div class="empty-state">
+        <i class="bi bi-stopwatch"></i>
+        <h2>No results yet</h2>
+        <p>Your finish times and positions will appear here once an organiser has captured them after your event.</p>
+        <a asp-controller="Participant" asp-action="MyEvents" class="btn btn-rd">See my events</a>
+    </div>
+}
+else if (Model.Results.Count > 0)
+{
+    var finished = Model.Results.Where(r => r.Status == "Finished").ToList();
+    var best = finished.Where(r => r.FinishTime is not null).OrderBy(r => r.Position ?? int.MaxValue).FirstOrDefault();
+    <div class="row g-3 mb-4">
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-number">@Model.Results.Count</div><div class="stat-label">Races recorded</div></div></div>
+        <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-number">@finished.Count</div><div class="stat-label">Finished</div></div></div>
+        <div class="col-12 col-md-6">
+            <div class="stat-card">
+                <div class="stat-number">@(best?.Position is { } p ? UiHelpers.Ordinal(p) : "-")</div>
+                <div class="stat-label">Best position@(best is null ? "" : " - " + best.EventName)</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive rd-table-wrap">
+        <table class="table rd-table align-middle mb-0">
+            <thead><tr><th>Event</th><th>Date</th><th>Category</th><th>Finish time</th><th>Position</th><th>Result</th></tr></thead>
+            <tbody>
+            @foreach (var r in Model.Results)
+            {
+                <tr>
+                    <td><a asp-controller="Events" asp-action="Details" asp-route-id="@r.EventId" class="fw-semibold">@r.EventName</a><div class="small text-muted"><i class="bi bi-geo-alt"></i> @r.Location</div></td>
+                    <td>@UiHelpers.Date(r.EventDate)</td>
+                    <td>@r.CategoryName <span class="text-muted small">(@r.DistanceKm.ToString("0.##") km)</span></td>
+                    <td class="time-cell">@UiHelpers.FormatTime(r.FinishTime)</td>
+                    <td>
+                        @if (r.Status == "Finished" && r.Position is { } pos)
+                        {
+                            <strong>@UiHelpers.Ordinal(pos)</strong><span class="text-muted"> of @r.TotalFinishers</span>
+                        }
+                        else
+                        {
+                            <span class="text-muted">-</span>
+                        }
+                    </td>
+                    <td><partial name="_StatusBadge" model="r.Status" /></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}

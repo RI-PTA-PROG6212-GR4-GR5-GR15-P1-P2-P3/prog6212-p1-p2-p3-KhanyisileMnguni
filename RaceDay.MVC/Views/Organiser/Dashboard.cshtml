@@ -1,5 +1,64 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model OrganiserDashboardViewModel
 @{
+    ViewData["Title"] = "Organiser dashboard";
+    var userName = Context.Session.UserName();
+    var next = Model.Upcoming.FirstOrDefault();
 }
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <h1 class="page-title mb-0"><i class="bi bi-speedometer2"></i> Dashboard</h1>
+    <a asp-action="Create" class="btn btn-rd btn-lg"><i class="bi bi-plus-circle"></i> Create event</a>
+</div>
+<p class="text-muted">Welcome back, @userName. Here's how your events are doing.</p>
+
+@if (Model.Error is not null)
+{
+    <div class="alert alert-warning">@Model.Error</div>
+}
+
+<div class="row g-3 mb-4">
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-number">@Model.Events.Count</div><div class="stat-label">Events created</div></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-number">@Model.Upcoming.Count</div><div class="stat-label">Upcoming events</div></div></div>
+    <div class="col-6 col-lg-3"><div class="stat-card"><div class="stat-number">@Model.TotalEnrolments</div><div class="stat-label">Total enrolments</div></div></div>
+    <div class="col-6 col-lg-3">
+        <div class="stat-card">
+            <div class="stat-number">@(next is null ? "-" : next.EventDate.ToString("d MMM"))</div>
+            <div class="stat-label">Next event@(next is null ? "" : ": " + next.EventName)</div>
+        </div>
+    </div>
+</div>
+
+<h2 class="section-title">Upcoming events</h2>
+@if (Model.Upcoming.Count == 0)
+{
+    <div class="empty-state">
+        <i class="bi bi-calendar-plus"></i>
+        <h2>No upcoming events</h2>
+        <p>Create your first event and open it for entries.</p>
+        <a asp-action="Create" class="btn btn-rd">Create an event</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive rd-table-wrap">
+        <table class="table rd-table align-middle mb-0">
+            <thead><tr><th>Event</th><th>Date</th><th>Location</th><th class="text-center">Categories</th><th class="text-center">Enrolments</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var e in Model.Upcoming)
+            {
+                <tr>
+                    <td><a asp-controller="Events" asp-action="Details" asp-route-id="@e.EventId" class="fw-semibold">@e.EventName</a> <span class="badge text-bg-light"><i class="bi @UiHelpers.TypeIcon(e.EventType)"></i> @e.EventType</span></td>
+                    <td>@UiHelpers.Date(e.EventDate)</td>
+                    <td>@e.Location</td>
+                    <td class="text-center">@e.CategoryCount</td>
+                    <td class="text-center"><span class="status-badge @(e.EnrolmentCount > 0 ? "status-confirmed" : "status-neutral")">@e.EnrolmentCount</span></td>
+                    <td class="text-end">
+                        <a asp-action="Enrolments" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-rd">Enrolments</a>
+                        <a asp-action="Categories" asp-route-id="@e.EventId" class="btn btn-sm btn-outline-secondary">Categories</a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+}
+<p class="mt-3"><a asp-action="Events"><i class="bi bi-arrow-right-circle"></i> See all events, including past ones</a></p>

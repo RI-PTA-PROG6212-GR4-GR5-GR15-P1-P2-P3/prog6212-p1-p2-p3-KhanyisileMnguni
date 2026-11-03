@@ -1,5 +1,56 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model EventEnrolmentsViewModel
 @{
+    var e = Model.Event;
+    ViewData["Title"] = "Enter results";
+    var statuses = new[] { "Finished", "DNF", "DNS", "Disqualified" };
+}
+<a asp-action="Events" class="back-link"><i class="bi bi-arrow-left"></i> My events</a>
+<h1 class="page-title mt-2"><i class="bi bi-stopwatch"></i> Enter results <span class="text-muted fs-4">- @e.EventName</span></h1>
+<p class="text-muted">Enter each participant's finish time (hours:minutes:seconds, e.g. <strong>00:52:30</strong>) and finishing position, then press Save. You can come back and correct a result at any time.</p>
+
+@if (Model.Enrolments.Count == 0)
+{
+    <div class="empty-state">
+        <i class="bi bi-person-plus"></i>
+        <h2>Nobody has entered yet</h2>
+        <p>Once participants enrol you can capture their results here.</p>
+    </div>
+}
+else
+{
+    <div class="table-responsive rd-table-wrap">
+        <table class="table rd-table align-middle mb-0 result-form">
+            <thead><tr><th>Participant</th><th>Category</th><th>Finish time</th><th>Position</th><th>Outcome</th><th></th></tr></thead>
+            <tbody>
+            @foreach (var n in Model.Enrolments)
+            {
+                var formId = "result-" + n.EnrolmentId;
+                var currentStatus = n.HasResult && !string.IsNullOrEmpty(n.ResultStatus) ? n.ResultStatus : "Finished";
+                <tr>
+                    <td>
+                        <form id="@formId" asp-action="SaveResult" method="post">
+                            <input type="hidden" name="EventId" value="@e.EventId" />
+                            <input type="hidden" name="EnrolmentId" value="@n.EnrolmentId" />
+                            <input type="hidden" name="HasResult" value="@(n.HasResult ? "true" : "false")" />
+                        </form>
+                        <span class="fw-semibold">@n.ParticipantName</span>
+                        @if (n.HasResult) { <span class="status-badge status-confirmed ms-1">Saved</span> }
+                    </td>
+                    <td>@n.CategoryName</td>
+                    <td><input form="@formId" name="FinishTime" value="@(n.FinishTime is null ? "" : UiHelpers.FormatTime(n.FinishTime))" class="form-control form-control-sm" placeholder="00:52:30" pattern="\d{1,2}:\d{2}:\d{2}" title="Hours:minutes:seconds, e.g. 00:52:30" aria-label="Finish time for @n.ParticipantName" /></td>
+                    <td><input form="@formId" name="Position" type="number" min="1" value="@n.Position" class="form-control form-control-sm" style="width:90px" aria-label="Position for @n.ParticipantName" /></td>
+                    <td>
+                        <select form="@formId" name="Status" class="form-select form-select-sm" aria-label="Outcome for @n.ParticipantName">
+                            @foreach (var s in statuses)
+                            {
+                                <option value="@s" selected="@(s == currentStatus)">@UiHelpers.StatusLabel(s)</option>
+                            }
+                        </select>
+                    </td>
+                    <td class="text-end"><button form="@formId" type="submit" class="btn btn-sm btn-rd"><i class="bi bi-save"></i> Save</button></td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
 }

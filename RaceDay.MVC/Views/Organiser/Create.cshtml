@@ -1,5 +1,15 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+@model EventFormViewModel
 @{
+    ViewData["Title"] = "Create event";
 }
+<a asp-action="Events" class="back-link"><i class="bi bi-arrow-left"></i> My events</a>
+<h1 class="page-title mt-2"><i class="bi bi-plus-circle"></i> Create an event</h1>
+<div class="card form-card">
+    <div class="card-body p-4">
+        <form asp-action="Create" method="post" enctype="multipart/form-data" novalidate>
+            <partial name="_EventFormFields" model="Model" />
+            <button type="submit" class="btn btn-rd btn-lg"><i class="bi bi-check2-circle"></i> Create event</button>
+            <a asp-action="Events" class="btn btn-link text-muted">Cancel</a>
+        </form>
+    </div>
+</div>
