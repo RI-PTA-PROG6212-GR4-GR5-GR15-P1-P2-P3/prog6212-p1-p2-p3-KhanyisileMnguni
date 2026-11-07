@@ -19,7 +19,7 @@ WORKDIR /app
 # so the API running on your machine is reachable from inside the container.
 ENV ASPNETCORE_URLS=http://+:8080 \
     ASPNETCORE_ENVIRONMENT=Production
-    ApiSettings__BaseUrl=http://host.docker.internal:5285/
+
 
 EXPOSE 8080
 COPY --from=build /app/publish .

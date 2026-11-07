@@ -7,9 +7,6 @@
     <NoWarn>$(NoWarn);1591</NoWarn>
     <UserSecretsId>d6ac9649-c9c7-4257-a7d5-be4d1d3fdffb</UserSecretsId>
   </PropertyGroup>
-	<ItemGroup>
-	  <Compile Include="Dockerfile" />
-	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.30.1" />
