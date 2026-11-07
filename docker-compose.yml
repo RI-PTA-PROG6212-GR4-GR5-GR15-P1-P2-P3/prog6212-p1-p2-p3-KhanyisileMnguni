@@ -1,0 +1,60 @@
+
+services:
+  raceday-db:
+    image: mcr.microsoft.com/mssql/server:2025-latest
+    container_name: raceday-db
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_PID: Developer
+      MSSQL_SA_PASSWORD: ${RACEDAY_DB_PASSWORD:?Set RACEDAY_DB_PASSWORD in .env}
+    ports:
+      - "1433:1433"
+    volumes:
+      - raceday-sql-data:/var/opt/mssql
+    networks:
+      - raceday-network
+
+  raceday-api:
+    container_name: raceday-api
+    build:
+      context: .
+      dockerfile: RaceDay.API/Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Production
+      ConnectionStrings__DefaultConnection: "Server=raceday-db,1433;Database=RaceDayDb;User Id=sa;Password=${RACEDAY_DB_PASSWORD};Encrypt=True;TrustServerCertificate=True"
+      Jwt__Key: ${RACEDAY_JWT_KEY:?Set RACEDAY_JWT_KEY in .env}
+      Jwt__Issuer: RaceDay.API
+      Jwt__Audience: RaceDay.Clients
+      Jwt__ExpiryMinutes: "180"
+      AzureBlobStorage__ConnectionString: ${RACEDAY_AZURE_CONNECTION_STRING:?Set RACEDAY_AZURE_CONNECTION_STRING in .env}
+    ports:
+      - "5285:8080"
+    depends_on:
+      - raceday-db
+    networks:
+      - raceday-network
+
+  raceday-mvc:
+    container_name: raceday-mvc
+    build:
+      context: RaceDay.MVC
+      dockerfile: Dockerfile
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ASPNETCORE_ENVIRONMENT: Production
+      ApiSettings__BaseUrl: http://raceday-api:8080/
+    ports:
+      - "8080:8080"
+    depends_on:
+      - raceday-api
+    networks:
+      - raceday-network
+
+volumes:
+  raceday-sql-data:
+    external: true
+
+networks:
+  raceday-network:
+    driver: bridge

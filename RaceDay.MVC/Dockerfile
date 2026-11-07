@@ -18,7 +18,7 @@ WORKDIR /app
 # Where to find the RaceDay API. "host.docker.internal" means "the computer running Docker",
 # so the API running on your machine is reachable from inside the container.
 ENV ASPNETCORE_URLS=http://+:8080 \
-    ASPNETCORE_ENVIRONMENT=Production \
+    ASPNETCORE_ENVIRONMENT=Production
     ApiSettings__BaseUrl=http://host.docker.internal:5285/
 
 EXPOSE 8080
