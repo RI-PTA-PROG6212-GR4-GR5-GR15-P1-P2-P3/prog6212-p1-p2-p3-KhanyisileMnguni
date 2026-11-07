@@ -1,4 +1,10 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../gitignore" />
+    <File Path="../README.md" />
+    <File Path=".env" />
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Project Path="../RaceDay.API.Tests/RaceDay.API.Tests.csproj" Id="73fa0498-6793-4c69-9fbe-39092bbb06be" />
   <Project Path="../RaceDay.MVC/RaceDay.MVC.csproj" Id="a518181a-8239-4c81-b028-760293d9932c" />
   <Project Path="RaceDay.API.csproj" />
