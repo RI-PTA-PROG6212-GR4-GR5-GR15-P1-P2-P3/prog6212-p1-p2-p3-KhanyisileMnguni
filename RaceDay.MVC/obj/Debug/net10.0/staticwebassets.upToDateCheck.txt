@@ -61,7 +61,10 @@ wwwroot\lib\jquery\dist\jquery.slim.js
 wwwroot\lib\jquery\dist\jquery.slim.min.js
 wwwroot\lib\jquery\dist\jquery.slim.min.map
 wwwroot\lib\jquery\LICENSE.txt
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\css\site.css
+wwwroot\images\avatar-placeholder.svg
+wwwroot\images\event-placeholder.svg
+wwwroot\images\hero.svg
+wwwroot\images\logo.svg
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\favicon.ico
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\js\site.js
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css
@@ -123,3 +126,8 @@ C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\Race
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\lib\jquery\dist\jquery.slim.min.js
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\lib\jquery\dist\jquery.slim.min.map
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\lib\jquery\LICENSE.txt
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\css\site.css
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\images\avatar-placeholder.svg
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\images\event-placeholder.svg
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\images\hero.svg
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\wwwroot\images\logo.svg

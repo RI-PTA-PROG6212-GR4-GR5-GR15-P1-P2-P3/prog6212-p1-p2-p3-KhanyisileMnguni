@@ -7,7 +7,6 @@ C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\Race
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\RaceDay.MVC.RazorAssemblyInfo.cache
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\RaceDay.MVC.RazorAssemblyInfo.cs
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\RaceDay.MVC.sourcelink.json
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\bin\Debug\net10.0\appsettings.Development.json
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\bin\Debug\net10.0\appsettings.json
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\bin\Debug\net10.0\RaceDay.MVC.staticwebassets.runtime.json
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\bin\Debug\net10.0\RaceDay.MVC.staticwebassets.endpoints.json
@@ -19,10 +18,7 @@ C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\Race
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\rjimswa.dswa.cache.json
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\rjsmrazor.dswa.cache.json
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\rjsmcshtml.dswa.cache.json
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\scopedcss\Views\Events\Index.cshtml.rz.scp.css
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\scopedcss\bundle\RaceDay.MVC.styles.css
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\scopedcss\projectbundle\RaceDay.MVC.bundle.scp.css
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\tshhundvo5-{0}-b9sayid5wm-b9sayid5wm.gz
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\xcq2afdoel-{0}-61n19gt1b8-61n19gt1b8.gz
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\h1aumdsabc-{0}-xtxxf3hu2r-xtxxf3hu2r.gz
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\bu5s2z8qiu-{0}-bqjiyaj88i-bqjiyaj88i.gz
@@ -84,8 +80,6 @@ C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\Race
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\k1dlk1lixm-{0}-muycvpuwrr-muycvpuwrr.gz
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\rw826dyxge-{0}-87fc7y1x7t-87fc7y1x7t.gz
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\7f577elp93-{0}-mlv21k5csn-mlv21k5csn.gz
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\4qxhih5kgn-{0}-ncp9naqknl-ncp9naqknl.gz
-C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\xzq9sdo1gi-{0}-ncp9naqknl-ncp9naqknl.gz
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\staticwebassets.build.json
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\staticwebassets.build.json.cache
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\staticwebassets.development.json
@@ -98,3 +92,8 @@ C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\Race
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\RaceDay.MVC.genruntimeconfig.cache
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\ref\RaceDay.MVC.dll
 C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\RaceDay..103F391E.Up2Date
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\tshhundvo5-{0}-nntrfw2dcp-nntrfw2dcp.gz
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\ob1aag2cha-{0}-fl4gz0adi5-fl4gz0adi5.gz
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\w1g14n6x6o-{0}-nd1f7xhogj-nd1f7xhogj.gz
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\nsiv1p81hw-{0}-hq8vq10w9f-hq8vq10w9f.gz
+C:\Users\mngun\OneDrive\Documents\GitHub\prog6212-p1-p2-p3-KhanyisileMnguni\RaceDay.MVC\obj\Debug\net10.0\compressed\khfa8a6xpo-{0}-yy7fv18wpg-yy7fv18wpg.gz
