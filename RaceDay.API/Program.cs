@@ -33,39 +33,39 @@ builder.Services.AddSingleton<JwtService>();
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
-   {
-   options.MapInboundClaims = false;   // keep claim names exactly as issued
-       options.Events = new JwtBearerEvents
-       {
-           // After POST /api/auth/logout the same token must stop working.
-           OnTokenValidated = context =>
-           {
-               var revoked = context.HttpContext.RequestServices.GetRequiredService<TokenRevocationList>();
-               if (context.SecurityToken is Microsoft.IdentityModel.JsonWebTokens.JsonWebToken token && revoked.IsRevoked(token.Id))
-                   context.Fail("This token has been logged out.");
-               return Task.CompletedTask;
-           },
-           OnAuthenticationFailed = context =>
-           {
-               Console.WriteLine($"JWT ERROR: {context.Exception.Message}");
-               return Task.CompletedTask;
-           }
-       };
+    {
+        options.MapInboundClaims = false;   // keep claim names exactly as issued
+        options.Events = new JwtBearerEvents
+        {
+            // After POST /api/auth/logout the same token must stop working.
+            OnTokenValidated = context =>
+            {
+                var revoked = context.HttpContext.RequestServices.GetRequiredService<TokenRevocationList>();
+                if (context.SecurityToken is Microsoft.IdentityModel.JsonWebTokens.JsonWebToken token && revoked.IsRevoked(token.Id))
+                    context.Fail("This token has been logged out.");
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine($"JWT ERROR: {context.Exception.Message}");
+                return Task.CompletedTask;
+            }
+        };
 
-       options.TokenValidationParameters = new TokenValidationParameters
-       {
-           ValidateIssuer = true,
-           ValidIssuer = jwt.Issuer,
-           ValidateAudience = true,
-           ValidAudience = jwt.Audience,
-           ValidateIssuerSigningKey = true,
-           IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
-           ValidateLifetime = true,
-           ClockSkew = TimeSpan.FromMinutes(1),
-           NameClaimType = ClaimTypes.Name,
-           RoleClaimType = ClaimTypes.Role
-       };
-   });
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = jwt.Issuer,
+            ValidateAudience = true,
+            ValidAudience = jwt.Audience,
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwt.Key)),
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.FromMinutes(1),
+            NameClaimType = ClaimTypes.Name,
+            RoleClaimType = ClaimTypes.Role
+        };
+    });
 
 builder.Services.AddAuthorization();
 
@@ -109,6 +109,26 @@ if (!app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+
+// Docker: create or update the database when the API starts. The SQL Server container needs a little while
+// before it accepts connections, so try again every few seconds. Only runs when Database:MigrateOnStartup is true.
+if (app.Configuration.GetValue<bool>("Database:MigrateOnStartup"))
+{
+    for (var attempt = 1; ; attempt++)
+    {
+        try
+        {
+            using var scope = app.Services.CreateScope();
+            scope.ServiceProvider.GetRequiredService<AppDbContext>().Database.Migrate();
+            break;
+        }
+        catch (Exception ex) when (attempt < 30)
+        {
+            app.Logger.LogWarning("Database is not ready yet (attempt {Attempt} of 30): {Message}", attempt, ex.Message);
+            Thread.Sleep(TimeSpan.FromSeconds(3));
+        }
+    }
+}
 
 app.Run();
 

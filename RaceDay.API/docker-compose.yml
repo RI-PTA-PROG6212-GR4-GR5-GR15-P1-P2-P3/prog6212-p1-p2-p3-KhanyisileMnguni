@@ -1,3 +1,9 @@
+# Starts the whole RaceDay system with one command:   docker compose up --build
+#   raceday-db   SQL Server
+#   raceday-api  the Part 2 REST API (creates its own database tables on first start)
+#   raceday-mvc  the Part 3 website
+# Passwords and keys come from the .env file (copy .env.example to .env and fill it in). Never commit .env.
+
 services:
   raceday-db:
     image: mcr.microsoft.com/mssql/server:2025-latest
@@ -7,7 +13,7 @@ services:
       MSSQL_PID: Developer
       MSSQL_SA_PASSWORD: ${RACEDAY_DB_PASSWORD:?Set RACEDAY_DB_PASSWORD in .env}
     ports:
-      - "1433:1433"
+      - "127.0.0.1:1433:1433"      # only reachable from this computer
     volumes:
       - raceday-sql-data:/var/opt/mssql
     networks:
@@ -26,7 +32,8 @@ services:
       Jwt__Issuer: RaceDay.API
       Jwt__Audience: RaceDay.Clients
       Jwt__ExpiryMinutes: "180"
-      AzureBlobStorage__ConnectionString: ${RACEDAY_AZURE_CONNECTION_STRING:?Set RACEDAY_AZURE_CONNECTION_STRING in .env}
+      AzureBlobStorage__ConnectionString: ${RACEDAY_AZURE_CONNECTION_STRING:-}
+      Database__MigrateOnStartup: "true"      # create/update the tables when the API starts
     ports:
       - "5285:8080"
     depends_on:
@@ -52,7 +59,7 @@ services:
 
 volumes:
   raceday-sql-data:
-    external: true
+    name: raceday-sql-data     # created automatically if it does not exist yet; reused if it does
 
 networks:
   raceday-network:

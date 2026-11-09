@@ -90,8 +90,11 @@ public class AccountController(ApiClient api) : AppController
     // ---------- Logout ----------
 
     [HttpPost, ValidateAntiForgeryToken]
-    public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
+        // Tell the API first so it stops accepting this token, then clear the session on this site.
+        if (IsLoggedIn) await api.PostAsync("/api/auth/logout");
+
         HttpContext.Session.Clear();
 
         TempData["Success"] = "You have been logged out.";

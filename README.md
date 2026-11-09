@@ -217,3 +217,90 @@ Screenshot of CI/CD workflow
 
 YouTube Video link:
 https://youtu.be/05gTS_h3Tv8
+
+# Part 3 - RaceDay Web Application (ASP.NET Core MVC, Azure Blob Storage, Docker)
+
+The RaceDay MVC web application is the front end for the Part 2 API. Organisers and Participants use it to create, browse,
+enter and track road running, walking and cycling events. The site has **no database code and no business logic of its own**:
+every piece of data comes from the Part 2 API, and every image upload goes through the API into Azure Blob Storage.
+
+**Demo video (unlisted YouTube):** <PASTE YOUR YOUTUBE LINK HERE>
+
+## Features
+
+| Area | What it does |
+|---|---|
+| Registration and login | Register as an Organiser or a Participant, log in through the API, log out. |
+| Session management | After login the session stores the JWT, user ID, role and name. Logging out clears the session and revokes the token on the API. Protected pages redirect unauthenticated users to the login page. |
+| Role-based navigation | Organisers and Participants see different menus. Visiting a page for the other role shows an "access denied" page. |
+| Organiser | Dashboard (events, enrolments per event, upcoming dates), create/edit/delete events with a banner image, add/edit/remove categories, view enrolments, enter and correct results. |
+| Participant | Home page with search and filters, event details with "Enter event", My Events (cancel an entry), My Results (finish time and position such as "47th of 312"), Profile with picture upload. |
+| Azure Blob Storage | Event banners and profile pictures are uploaded from the MVC site to the API, stored in private Azure containers by the API, saved in the database as a URL, and shown on the pages. |
+| Docker | The whole system (SQL Server, API and MVC site) starts with one command (see below). |
+| UI | Bootstrap 5 with a RaceDay sporting theme. Enrolment and result statuses are colour coded (amber = registered, green = completed, red = did not finish or similar). |
+
+## How the pieces fit together
+
+```
+Browser  ->  RaceDay.MVC (ASP.NET Core MVC, session)  ->  RaceDay.API (REST, JWT, EF Core)  ->  SQL Server
+                                                                    |
+                                                                    +->  Azure Blob Storage (event banners, profile pictures)
+```
+
+* `RaceDay.MVC/Controllers` - one controller per area (Account, Home, Events, Participant, Organiser, Media).
+* `RaceDay.MVC/Services/ApiClient.cs` - the only class that calls the API. It adds the logged-in user's token and turns every failure into a friendly message.
+* `RaceDay.MVC/Infrastructure` - session helpers and the `[SessionAuthorize("Organiser")]` filter that protects pages.
+* `RaceDay.MVC/Views` - Razor views, with shared layout, alerts, event card and status badge.
+* `RaceDay.MVC/Models` - view models and simple copies of the API's responses.
+
+## Run everything with Docker (one command)
+
+Requirements: Docker Desktop.
+
+1. Create your private settings file from the template and fill in the values (it is ignored by git and must never be committed):
+   ```
+   Copy-Item .env.example .env
+   ```
+   (on macOS/Linux: `cp .env.example .env`). Set `RACEDAY_DB_PASSWORD`, `RACEDAY_JWT_KEY` and, for image uploads,
+   `RACEDAY_AZURE_CONNECTION_STRING` (from the Azure portal: your storage account > Security + networking > Access keys).
+2. From the repository root, start SQL Server, the API and the MVC site:
+   ```
+   docker compose up --build
+   ```
+3. Open the site at **http://localhost:8080** and the API's Swagger page at **http://localhost:5285/swagger**.
+
+The API creates the database tables automatically the first time it starts. Stop everything with `Ctrl+C`, or `docker compose down`.
+The containerised site behaves the same as the one started from Visual Studio; only the API address differs, and it is passed in with the
+`ApiSettings__BaseUrl` environment variable.
+
+### Run only the MVC site in Docker (API running on your computer)
+
+```
+dotnet run --project RaceDay.API --urls "http://0.0.0.0:5285"
+docker build -t raceday-mvc ./RaceDay.MVC
+docker run --rm -p 8080:8080 -e ApiSettings__BaseUrl=http://host.docker.internal:5285/ raceday-mvc
+```
+
+## Run it locally (without Docker)
+
+1. Start the API with Visual Studio (http or https profile) or `dotnet run --project RaceDay.API`.
+2. Store the Azure Storage connection string for the API (it is never committed):
+   ```
+   dotnet user-secrets set "AzureBlobStorage:ConnectionString" "<your connection string>" --project RaceDay.API
+   ```
+3. `RaceDay.MVC/appsettings.json` already points at the API (`"ApiSettings": { "BaseUrl": "http://localhost:5285/" }`). Run `RaceDay.MVC`.
+
+## GitHub Actions
+
+`.github/workflows/ci.yml` runs on every push and pull request. It validates the repository structure (and checks that no secrets file is committed),
+builds the API, tests and MVC site, runs all unit tests, validates `docker-compose.yml` and builds both Docker images.
+
+Screenshot of a successful green build:
+
+<PASTE YOUR CI SCREENSHOT HERE>
+
+## Security notes
+
+* Passwords are stored as salted hashes. The browser only holds a session cookie; the JWT stays on the server in the session.
+* Secrets (database password, JWT key, Azure connection string) live in the git-ignored `.env` file, User Secrets or environment variables, never in the repository.
+* Uploaded images are checked for type, size and real image content, and stored in private containers. Only the API can read them.

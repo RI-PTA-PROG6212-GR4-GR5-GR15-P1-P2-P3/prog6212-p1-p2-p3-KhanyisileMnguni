@@ -67,7 +67,7 @@ public class OrganiserController(ApiClient api) : AppController
         // The main distance becomes the event's first category (more can be added on the Categories page).
         var firstCategory = await api.PostAsync<CreatedCategoryResponse>($"/api/events/{eventId}/categories", new
         {
-            categoryName = $"{model.DistanceKm.Value.ToString("0.##", CultureInfo.InvariantCulture)} km",
+            categoryName = $"{model.DistanceKm.GetValueOrDefault().ToString("0.##", CultureInfo.InvariantCulture)} km",
             distanceKM = model.DistanceKm,
             maxParticipants = model.MaxParticipants,
             entryFee = model.EntryFee
