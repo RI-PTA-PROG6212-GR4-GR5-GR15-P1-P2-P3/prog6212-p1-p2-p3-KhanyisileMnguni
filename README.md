@@ -224,10 +224,7 @@ The RaceDay MVC web application is the front end for the Part 2 API. Organisers 
 enter and track road running, walking and cycling events. The site has **no database code and no business logic of its own**:
 every piece of data comes from the Part 2 API, and every image upload goes through the API into Azure Blob Storage.
 
-**Demo video (unlisted YouTube):** <PASTE YOUR YOUTUBE LINK HERE>
-
-## Features
-
+Features
 | Area | What it does |
 |---|---|
 | Registration and login | Register as an Organiser or a Participant, log in through the API, log out. |
@@ -239,7 +236,7 @@ every piece of data comes from the Part 2 API, and every image upload goes throu
 | Docker | The whole system (SQL Server, API and MVC site) starts with one command (see below). |
 | UI | Bootstrap 5 with a RaceDay sporting theme. Enrolment and result statuses are colour coded (amber = registered, green = completed, red = did not finish or similar). |
 
-## How the pieces fit together
+How the pieces fit together
 
 ```
 Browser  ->  RaceDay.MVC (ASP.NET Core MVC, session)  ->  RaceDay.API (REST, JWT, EF Core)  ->  SQL Server
@@ -253,7 +250,7 @@ Browser  ->  RaceDay.MVC (ASP.NET Core MVC, session)  ->  RaceDay.API (REST, JWT
 * `RaceDay.MVC/Views` - Razor views, with shared layout, alerts, event card and status badge.
 * `RaceDay.MVC/Models` - view models and simple copies of the API's responses.
 
-## Run everything with Docker (one command)
+Run everything with Docker (one command)
 
 Requirements: Docker Desktop.
 
@@ -273,7 +270,7 @@ The API creates the database tables automatically the first time it starts. Stop
 The containerised site behaves the same as the one started from Visual Studio; only the API address differs, and it is passed in with the
 `ApiSettings__BaseUrl` environment variable.
 
-### Run only the MVC site in Docker (API running on your computer)
+Run only the MVC site in Docker (API running on your computer)
 
 ```
 dotnet run --project RaceDay.API --urls "http://0.0.0.0:5285"
@@ -281,7 +278,7 @@ docker build -t raceday-mvc ./RaceDay.MVC
 docker run --rm -p 8080:8080 -e ApiSettings__BaseUrl=http://host.docker.internal:5285/ raceday-mvc
 ```
 
-## Run it locally (without Docker)
+Run it locally (without Docker)
 
 1. Start the API with Visual Studio (http or https profile) or `dotnet run --project RaceDay.API`.
 2. Store the Azure Storage connection string for the API (it is never committed):
@@ -290,7 +287,7 @@ docker run --rm -p 8080:8080 -e ApiSettings__BaseUrl=http://host.docker.internal
    ```
 3. `RaceDay.MVC/appsettings.json` already points at the API (`"ApiSettings": { "BaseUrl": "http://localhost:5285/" }`). Run `RaceDay.MVC`.
 
-## GitHub Actions
+GitHub Actions
 
 `.github/workflows/ci.yml` runs on every push and pull request. It validates the repository structure (and checks that no secrets file is committed),
 builds the API, tests and MVC site, runs all unit tests, validates `docker-compose.yml` and builds both Docker images.
@@ -299,7 +296,9 @@ Screenshot of a successful green build:
 
 <PASTE YOUR CI SCREENSHOT HERE>
 
-## Security notes
+YouTube Video link:
+
+Security notes
 
 * Passwords are stored as salted hashes. The browser only holds a session cookie; the JWT stays on the server in the session.
 * Secrets (database password, JWT key, Azure connection string) live in the git-ignored `.env` file, User Secrets or environment variables, never in the repository.
