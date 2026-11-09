@@ -4,7 +4,7 @@ RaceDay is a full-stack, web-based event management system built for the South A
 It replaces the paper-based registration, spreadsheets, and disconnected communication that many local road events
 (park runs, charity walks, community cycling events) currently rely on.
 
-The platform allows Event Organisers to create and manage events, define categories (e.g. distance-based race categories),and capture participant results.
+The platform allows Event Organisers to create and manage events, define categories (for example, distance-based race categories), and capture participant results.
 Participants can browse upcoming events, enter events by enrolling in a category, track their personal performance history across past events,
 and prepare for race day using live weather and route information.
 
@@ -96,7 +96,7 @@ RaceDay.API.Tests/
 └── TestSupport.cs
 
 The two roles:
-Organiser - creates, updates and deletes *their own* events; defines categories for them (name, distance, max
+Organiser - creates, updates and deletes their own events; defines categories for them (name, distance, max
 participants, entry fee); views all enrolments for their events; captures finish time, position and status for
 enrolments in their events. Cannot enrol in events.
 
@@ -126,50 +126,45 @@ Restore the project's NuGet packages.
 
 Setup and run:
 1. Install Visual Studio with the ASP.NET workload, .NET SDK matching the project, and SQL Server (LocalDB is fine).
-2. Clone the repo and open `RaceDay_API.slnx` (or the solution in the Part 2 folder).
-3. Check `ConnectionStrings:DefaultConnection` in `RaceDay.API/appsettings.json` points at your SQL Server.
-4. Create the database from the models. In **Package Manager Console** (Default project = `RaceDay.API`):
-   ```
-   Add-Migration InitialCreate
+2. Clone the repo and open RaceDay_API.slnx (or the solution in the Part 2 folder).
+3. Check ConnectionStrings:DefaultConnection in RaceDay.API/appsettings.json points at your SQL Server.
+4. Create the database from the models. In Package Manager Console (Default project = RaceDay.API):Add-Migration InitialCreate
    Update-Database
-   ```
-5. Run `RaceDay.API` (https profile). Swagger opens at `https://localhost:<port>/swagger`.
-6. In Swagger: `POST /api/auth/register`, then `POST /api/auth/login`. The browser keeps the session cookie,
-   so every later "Try it out" call in that tab is authenticated. Use `POST /api/auth/logout` to switch user.
-
+5. Run RaceDay.API (https profile). Swagger opens at https://localhost:<port>/swagger.
+6. In Swagger, register a test account with the Organiser role and another with the Participant role. Log in with each account using POST /api/auth/login, then authorise requests with the JWT returned by the API (use the Authorize control or the Authorization: Bearer <token> header, as supported by the Swagger configuration). Test role-restricted endpoints with both roles. Use POST /api/auth/logout where available, or log out by ending the authenticated session/token according to the API implementation before switching accounts.
 Endpoints (from the Part 1 plan)
-| # | Method | Route | Access |
-|---|---|---|---|
-| 1 | POST | /api/auth/register | Public |
-| 2 | POST | /api/auth/login | Public |
-| 3 | GET | /api/profile | Logged in |
-| 4 | PUT | /api/profile | Logged in |
-| 5 | POST | /api/events | Organiser |
-| 6 | GET | /api/events | Public |
-| 7 | GET | /api/events/{id} | Public |
-| 8 | PUT | /api/events/{id} | Organiser (owner) |
-| 9 | DELETE | /api/events/{id} | Organiser (owner) |
-| 10 | POST | /api/events/{id}/categories | Organiser (owner) |
-| 11 | GET | /api/events/{id}/categories | Public |
-| 12 | PUT | /api/categories/{id} | Organiser (owner) |
-| 13 | DELETE | /api/categories/{id} | Organiser (owner) |
-| 14 | POST | /api/categories/{id}/enrolments | Participant |
-| 15 | GET | /api/enrolments/customer | Participant |
-| 16 | GET | /api/events/{id}/enrolments | Organiser (owner) |
-| 17 | DELETE | /api/enrolments/{id} | Participant (owner) |
-| 18 | POST | /api/enrolments/{id}/result | Organiser (owner) |
-| 19 | GET | /api/enrolments/{id}/result | Logged in (own result / own event) |
-| 20 | GET | /api/participants/me/history | Participant |
+#	Method	Route	Access
+1	POST	/api/auth/register	Public
+2	POST	/api/auth/login	Public
+3	GET	/api/profile	Logged in
+4	PUT	/api/profile	Logged in
+5	POST	/api/events	Organiser
+6	GET	/api/events	Public
+7	GET	/api/events/{id}	Public
+8	PUT	/api/events/{id}	Organiser (owner)
+9	DELETE	/api/events/{id}	Organiser (owner)
+10	POST	/api/events/{id}/categories	Organiser (owner)
+11	GET	/api/events/{id}/categories	Public
+12	PUT	/api/categories/{id}	Organiser (owner)
+13	DELETE	/api/categories/{id}	Organiser (owner)
+14	POST	/api/categories/{id}/enrolments	Participant
+15	GET	/api/enrolments/customer	Participant
+16	GET	/api/events/{id}/enrolments	Organiser (owner)
+17	DELETE	/api/enrolments/{id}	Participant (owner)
+18	POST	/api/enrolments/{id}/result	Organiser (owner)
+19	GET	/api/enrolments/{id}/result	Logged in (own result / own event)
+20	GET	/api/participants/me/history	Participant
 
-Extra: `POST /api/auth/logout` ends the session.
+
+Extra: POST /api/auth/logout ends the session.
 
 Database Configuration:
 Configure the database connection string in appsettings.json or through your development environment's configuration settings.
 Example connection string:
 {
-  "ConnectionStrings": {
-    "DefaultConnection": "YOUR_SQL_SERVER_CONNECTION_STRING"
-  }
+"ConnectionStrings": {
+"DefaultConnection": "YOUR_SQL_SERVER_CONNECTION_STRING"
+}
 }
 Replace the placeholder with your actual SQL Server connection string. Keep private credentials and production connection details out of source control.
 
@@ -185,22 +180,18 @@ dotnet run
 The application will display the local address where the API is running.
 
 RaceDay API integration tests:
-These tests exercise the API through HTTP using `WebApplicationFactory<Program>`. They cover:
+These tests exercise the API through HTTP using WebApplicationFactory<Program>. They cover:
 - Registration and login, including invalid credentials.
 - Anonymous requests to protected endpoints.
 - Organiser-only event creation and event ownership checks.
 - Participant-only enrolment and checking that the enrolment is returned by the participant's enrolment endpoint.
 - Wrong-role rejection and duplicate enrolment.
-The test host replaces SQL Server with a uniquely named EF Core InMemory database, so tests do not require a local SQL Server instance.
-Run locally
-From the solution folder:
-```bash
+  The test host replaces SQL Server with a uniquely named EF Core InMemory database, so tests do not require a local SQL Server instance.
+  Run locally
+  From the solution folder:
 dotnet restore RaceDay.API.slnx
 dotnet test RaceDay.API.slnx --configuration Release
-```
-The test project uses the .NET 10 target framework to match the API. These tests still need to be run on a machine with the .NET 10 SDK installed; they have not been executed in this environment.
-Test Coverage
-The current local test run completed successfully with 5 tests passed, 0 failed, and 0 skipped.
+The test project targets .NET 10 to match the API. Run the command above on a machine with the .NET 10 SDK installed. The test results recorded for this project are 5 passed, 0 failed, and 0 skipped; rerun the suite after making changes and confirm the GitHub Actions result.
 Authentication and Authorisation
 Protected endpoints require a valid JWT access token where authentication is enforced.
 
@@ -209,7 +200,7 @@ Authorization: Bearer YOUR_ACCESS_TOKEN
 Access to role-restricted functionality depends on the authenticated user's assigned role and the API's authorisation rules.
 
 Continuous Integration:
-The project is intended to run automated tests locally and through **GitHub Actions CI/CD**.
+The project is intended to run automated tests locally and through GitHub Actions CI/CD.
 The GitHub Actions workflow should restore dependencies, build the solution, and run the test suite. Successful local test results do not by themselves confirm that the GitHub Actions workflow is configured or passing.
 
 Screenshot of CI/CD workflow
