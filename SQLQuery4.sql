@@ -1,0 +1,24 @@
+USE RaceDayDb;
+GO
+
+SELECT
+    TABLE_SCHEMA,
+    TABLE_NAME
+FROM INFORMATION_SCHEMA.TABLES
+WHERE TABLE_TYPE = 'BASE TABLE'
+ORDER BY TABLE_NAME;
+
+USE RaceDayDb;
+GO
+
+SELECT 'Organiser' AS TableName, COUNT(*) AS Total FROM Organiser
+UNION ALL
+SELECT 'Participant', COUNT(*) FROM Participant
+UNION ALL
+SELECT 'Event', COUNT(*) FROM Event
+UNION ALL
+SELECT 'Category', COUNT(*) FROM Category
+UNION ALL
+SELECT 'Enrolment', COUNT(*) FROM Enrolment
+UNION ALL
+SELECT 'Result', COUNT(*) FROM Result;

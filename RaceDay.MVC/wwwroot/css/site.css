@@ -29,3 +29,11 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Event banner text contrast */
+.event-hero .event-hero-overlay h1,
+.event-hero .event-hero-overlay .event-hero-meta,
+.event-hero .event-hero-overlay .event-hero-meta li,
+.event-hero .event-hero-overlay .event-hero-meta i {
+    color: #ffffff !important;
+}
