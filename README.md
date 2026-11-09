@@ -349,8 +349,7 @@ GitHub Actions
 builds the API, tests and MVC site, runs all unit tests, validates `docker-compose.yml` and builds both Docker images.
 
 Screenshot of a successful green build:
-
-<ADD A SCREENSHOT OF THE SUCCESSFUL PART 3 GITHUB ACTIONS RUN HERE>
+<img width="928" height="412" alt="Screenshot 2026-11-09 161715" src="https://github.com/user-attachments/assets/543d4b27-05ea-472b-9ae8-9f98c86d09a5" />
 
 Security notes
 
