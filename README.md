@@ -264,7 +264,6 @@ Requirements: Docker Desktop.
    ```
    docker compose up --build
    ```
-3. Open the site at **http://localhost:8080** and the API's Swagger page at **http://localhost:5285/swagger**.
 
 The API creates the database tables automatically the first time it starts. Stop everything with `Ctrl+C`, or `docker compose down`.
 The containerised site behaves the same as the one started from Visual Studio; only the API address differs, and it is passed in with the
