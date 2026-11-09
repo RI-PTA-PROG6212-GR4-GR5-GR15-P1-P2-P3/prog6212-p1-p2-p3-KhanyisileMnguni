@@ -1,0 +1,127 @@
+name: RaceDay CI
+
+# Runs on every push and pull request:
+#   1. validate-structure: checks the repository has the files and folders the assignment requires
+#   2. build-and-test:     builds the API, the MVC site and the tests, then runs all unit tests
+#   3. docker-build:       checks docker-compose.yml and builds both Docker images
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOPT_OUT: true
+
+jobs:
+  validate-structure:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Validate repository structure
+        run: |
+          missing=0
+
+          check_file() {
+            if [ -f "$1" ]; then echo "OK      $1"; else echo "::error::Missing file: $1"; missing=1; fi
+          }
+          check_dir() {
+            if [ -d "$1" ]; then echo "OK      $1/"; else echo "::error::Missing folder: $1"; missing=1; fi
+          }
+          check_pattern() {   # $1 = folder, $2 = file name pattern, $3 = description
+            if [ -n "$(find "$1" -iname "$2" 2>/dev/null | head -n 1)" ]; then
+              echo "OK      $3"
+            else
+              echo "::error::Missing $3 in $1"; missing=1
+            fi
+          }
+
+          echo "== Top level =="
+          check_file "README.md"
+          check_file "docker-compose.yml"
+          check_file ".env.example"
+
+          echo "== Secrets must not be in the repository =="
+          if git ls-files --error-unmatch .env >/dev/null 2>&1; then
+            echo "::error::The .env file (passwords and keys) is committed. Remove it with: git rm --cached .env"; missing=1
+          else
+            echo "OK      .env is not committed"
+          fi
+
+          echo "== Part 1: planning documents =="
+          check_dir "Part 1/docs"
+          check_pattern "Part 1/docs" "*erd*"      "ERD"
+          check_pattern "Part 1/docs" "*endpoint*" "API endpoint plan"
+          check_pattern "Part 1/docs" "*.sql"      "SQL script"
+
+          echo "== Part 2: API and tests =="
+          check_file "RaceDay.API/RaceDay.API.csproj"
+          check_file "RaceDay.API/Program.cs"
+          check_file "RaceDay.API/Dockerfile"
+          check_dir  "RaceDay.API/Controllers"
+          check_dir  "RaceDay.API/Models"
+          check_dir  "RaceDay.API/Services"
+          check_dir  "RaceDay.API/Migrations"
+          check_file "RaceDay.API.Tests/RaceDay.API.Tests.csproj"
+
+          echo "== Part 3: MVC site and Docker =="
+          check_file "RaceDay.MVC/RaceDay.MVC.csproj"
+          check_file "RaceDay.MVC/Program.cs"
+          check_file "RaceDay.MVC/Dockerfile"
+          check_dir  "RaceDay.MVC/Controllers"
+          check_dir  "RaceDay.MVC/Views"
+          check_dir  "RaceDay.MVC/Services"
+
+          if [ "$missing" -ne 0 ]; then
+            echo "Repository structure validation FAILED."
+            exit 1
+          fi
+          echo "Repository structure validation passed."
+
+  build-and-test:
+    needs: validate-structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      # The test project references the API project, so this restores and builds both.
+      - name: Restore (API and tests)
+        run: dotnet restore RaceDay.API.Tests/RaceDay.API.Tests.csproj
+
+      - name: Build (API and tests)
+        run: dotnet build RaceDay.API.Tests/RaceDay.API.Tests.csproj --no-restore --configuration Release
+
+      - name: Run unit tests
+        run: dotnet test RaceDay.API.Tests/RaceDay.API.Tests.csproj --no-build --configuration Release --verbosity normal
+
+      - name: Build the MVC site
+        run: |
+          dotnet restore RaceDay.MVC/RaceDay.MVC.csproj
+          dotnet build RaceDay.MVC/RaceDay.MVC.csproj --no-restore --configuration Release
+
+  docker-build:
+    needs: validate-structure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      - name: Validate docker-compose.yml
+        env:
+          RACEDAY_DB_PASSWORD: ci-check-Passw0rd!
+          RACEDAY_JWT_KEY: ci-check-jwt-key-with-at-least-32-characters
+        run: docker compose config --quiet
+
+      - name: Build the API Docker image
+        run: docker build -f RaceDay.API/Dockerfile -t raceday-api .
+
+      - name: Build the MVC Docker image
+        run: docker build -t raceday-mvc ./RaceDay.MVC
